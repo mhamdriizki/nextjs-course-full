@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 export default async function KatalogPage({
@@ -13,6 +14,7 @@ export default async function KatalogPage({
 
   return (
     <div style={{ padding: '2rem' }}>
+      <CekCookies />
       <h1>Halaman Katalog</h1>
 
       {/* Form pencarian untuk katalog yang sederhana */}
@@ -38,6 +40,21 @@ export default async function KatalogPage({
         <Link href={`/katalog?query=${query}&page=${currentPage - 1}`}>Sebelumnya</Link>
         <Link href={`/katalog?query=${query}&page=${currentPage + 1}`}>Selanjutnya</Link>
       </div>
+    </div>
+  )
+}
+
+async function CekCookies() {
+  const cookiesStore = await cookies();
+  console.log("Cookies saat ini:", cookiesStore.getAll());
+
+  // Ambil tema user atau ambil nilai dari backend
+  const temaUser = cookiesStore.get("tema")?.value || "default";
+
+  return (
+    <div style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ccc'}}>
+      <h3>Tema User:</h3>
+      <p>{temaUser}</p>
     </div>
   )
 }
