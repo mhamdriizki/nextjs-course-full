@@ -5,11 +5,21 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Color palette */
+  --color-brand-utama: #256e3b;
+  --color-brand-gelap: #1e3a8a;
+  --color-brand-terang: #dbeafe;
+
+  /* Custom border radius */
+  --radius-super: 1.5rem;
+}
+
+@layer base {
+  body {
+    background-color: #f9fafb;
+    color: #111827;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,10 +27,4 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
