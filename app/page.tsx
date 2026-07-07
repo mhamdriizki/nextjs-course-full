@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
 export default function HomePage() {
   return (
     <main className="min-h-screen p-8 lg:p-24">
@@ -22,8 +25,32 @@ export default function HomePage() {
           <h2 className="text-xl font-bold text-brand-gelap mb-2">Tailwind</h2>
           <p className="text-brand-gelap/80">Framework CSS</p>
         </div>
-      </div>
 
+        {/* Aplikasi card shadcn */}
+        <Card className="transition-transform hover:-translate-y-1 hover:shadow-lg border border-brand-utama">
+          <CardHeader>
+            <CardTitle className="text-brand-gelap">
+              Shadcn/ui Card Component
+            </CardTitle>
+            <CardDescription>
+              Mengaplikasikan Card dan Button dari Shadcn
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <p className="text-sm text-gray-500">
+              Ini adalah contoh nya dari component card
+            </p>
+          </CardContent>
+
+          <CardFooter>
+            <Button variant='default' className='w-full'>
+              Ambil kelas ini
+            </Button>
+          </CardFooter>
+        </Card>
+
+      </div>
     </main>
   )
 }
