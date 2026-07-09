@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import RequestModulDialog from "./components/RequestModulDialog";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function HomePage() {
   return (
@@ -107,6 +109,60 @@ export default function HomePage() {
             </Button>
           </CardFooter>
         </Card>
+      </div>
+
+      {/* Area untuk table dan dialog */}
+      <div className="max-w-4xl border-t pt-12">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Jadwal Rilis modul</h2>
+            <p className="text-slate-500">Pantau terus update materi dari kami</p>
+          </div>
+
+          {/* Panggil komponen dialog custom */}
+          <RequestModulDialog/>
+        </div>
+
+        {/* Penggunaan table */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <Table>
+            <TableCaption className="pb-4">
+              Daftar silabus materi Next.JS
+            </TableCaption>
+
+            <TableHeader className="bg-slate-50">
+              <TableRow>
+                <TableHead className="w-[100px]">ID</TableHead>
+                <TableHead>Topik pembahasan</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Estimasi rilis</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">MOD-01</TableCell>
+                <TableCell>Fondasi App Router</TableCell>
+                <TableCell><Badge variant="default">Tersedia</Badge></TableCell>
+                <TableCell className="text-right">-</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium">MOD-02</TableCell>
+                <TableCell>UI dan Styling</TableCell>
+                <TableCell><Badge variant="default">Tersedia</Badge></TableCell>
+                <TableCell className="text-right">-</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium">MOD-03</TableCell>
+                <TableCell>Prisma dan PostgreSQK</TableCell>
+                <TableCell><Badge variant="outline">On Progress</Badge></TableCell>
+                <TableCell className="text-right">Minggu depan</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </main>
   )
