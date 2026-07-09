@@ -2,6 +2,7 @@ import Navbar from "./components/Navbar"
 import './globals.css';
 import { Figtree } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
 
@@ -12,17 +13,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id" className={cn("font-sans", figtree.variable)}>
+    // Wajib tambahkan suppressHydrationWarning untuk mencegah React panik kalau tema server beda 
+    // dengan tema browser user
+    <html lang="id" className={cn("font-sans", figtree.variable)} suppressHydrationWarning>
       <body style={{ margin:0, padding:0, fontFamily: 'Arial, sans-serif' }}>
-        <Navbar/>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange>
+            <Navbar/>
 
-        <main style={{ padding: '2rem', minHeight: '80vh'}}>
-          {children}
-        </main>
+            <main style={{ padding: '2rem', minHeight: '80vh'}}>
+              {children}
+            </main>
 
-        <footer style={{textAlign: 'center'}}>
-          &copy; 2026 EasyCoding Next.JS
-        </footer>
+            <footer style={{textAlign: 'center'}}>
+              &copy; 2026 EasyCoding Next.JS
+            </footer>
+        </ThemeProvider>
       </body>
     </html>
       
