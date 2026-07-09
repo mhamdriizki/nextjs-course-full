@@ -1,55 +1,112 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen p-8 lg:p-24">
-      {/* Menggunakan typography standard tailwind */}
-      <h1 className="text-4xl font-extrabold tracking-tight mb-8">
-        Next JS Course
+    <main className="min-h-screen p-8 lg:p-24 bg-gray-50">
+      <h1 className="text-4xl font-extrabold tracking-tight mb-8 text-slate-900">
+        Next.js Masterclass
       </h1>
+      <p className="text-lg text-slate-600 mb-8 max-w-2xl">
+        Pilih modul pembelajaran yang ingin kamu pelajari
+      </p>
 
-      {/* Menggunakan responsive grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-        {/* Card 1 */}
-        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 transition-transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="text-xl font-bold text-brand-gelap mb-2">Shadcn/UI</h2>
-          <p className="text-brand-gelap/80">Kumpulan Komponen Library</p>
+      {/* Area untuk katalog course */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mb-12">
+
+        {/* Area card 1 */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 transition-transform hover:-translate-y-1 hover:shadow-md">
+          <div className="flex justify-between items-start mb-4">
+            <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-2xl">
+              📘
+            </div>
+
+            {/* Penggunaan Badge */}
+            <Badge variant="secondary">Dasar</Badge>
+          </div>
+
+          <h2 className="text-xl font-bold mb-2 text-slate-800">
+            Modul 1: Fondasi App Router
+          </h2>
+
+          <button className="bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-800 transition-colors w-full font-medium">
+            Mulai belajar
+          </button>
         </div>
 
-
-        {/* Card 2 */}
-        <div className="bg-brand-terang p-6 rounded-super shadow-md border border-brand-utama transition-transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="text-xl font-bold text-brand-gelap mb-2">Tailwind</h2>
-          <p className="text-brand-gelap/80">Framework CSS</p>
-        </div>
-
-        {/* Aplikasi card shadcn */}
-        <Card className="transition-transform hover:-translate-y-1 hover:shadow-lg border border-brand-utama">
+        {/* Area card 2 */}
+        <Card className="transition-transform hover:-translate-y-1 hover:shadow-md border-blue-600 relative overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-brand-gelap">
-              Shadcn/ui Card Component
+            <div className="flex justify-between items-start mb-4">
+              <div className="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-2xl">
+                🖌️
+              </div>
+
+              {/* Penggunaan Badge */}
+              <Badge variant="destructive" className="animate-pulse">Populer</Badge>
+            </div>
+
+            <CardTitle className="text-slate-900">
+              Module 2: UI dan Styling
             </CardTitle>
-            <CardDescription>
-              Mengaplikasikan Card dan Button dari Shadcn
+
+            <CardDescription className="text-slate-500">
+              Membangun UI UX yang premium
             </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <p className="text-sm text-gray-500">
-              Ini adalah contoh nya dari component card
+            <p className="text-sm text-blue-600 font-medium bg-blue-50 inline-block px-2 py-1 rounded">
+              Rilis minggu ini
             </p>
           </CardContent>
 
           <CardFooter>
-            <Button variant='default' className='w-full'>
-              Ambil kelas ini
+            <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium">
+              Ambil mmodul ini
             </Button>
           </CardFooter>
         </Card>
+      </div>
 
+      {/* Area untuk form */}
+      <div className="max-w-md">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Belum siap belajar?
+            </CardTitle>
+
+            <CardDescription>
+              Masuk ke daftar tunggu untuk mendapatkan diskon 50% saat modul 3 rilis!
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            {/* Penggunaan label dan input */}
+            <div className="space-y-2">
+              <Label htmlFor="email-whitelist">
+                Alamat email
+              </Label>
+
+              <Input
+                id="email-whitelist"
+                type="email"
+                placeholder="nama@mail.com"/>
+            </div>
+          </CardContent>
+
+          <CardFooter>
+            <Button variant="outline" className="w-full">
+              Gabung waitlist!
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </main>
   )
