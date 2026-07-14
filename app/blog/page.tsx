@@ -1,11 +1,15 @@
-import { getPublishedPosts, getTrendingTags } from "@/lib/data/blog";
+import { getPosts, getPublishedPosts, getTrendingTags } from "@/lib/data/blog";
 import { PostList } from "./components/PostList"
 import { Suspense } from "react";
 import { CategorySidebar } from "./components/CategorySidebar";
 import { LiveViewers } from "./components/LiveViewer";
 import { PopularPosts } from "./components/PopularPosts";
+import { AddPostForm } from "./components/AddPostForm";
 
 export default async function BlogPage() {
+  // Panggil data (Ini akan memanggil cache dari memori, sangat cepat setelah render pertama!)
+  const posts = await getPosts();
+
   console.time("Mengukur waktu fetch");
   const post = await getPublishedPosts();
   console.timeEnd("Mengukur waktu fetch")
@@ -41,6 +45,22 @@ export default async function BlogPage() {
                 <CategorySidebar/>
           </Suspense>
         </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto mt-8">
+        <h1 className="text-4xl font-extrabold mb-8 text-slate-900">Manajemen Blog 📝</h1>
+      
+        {/* Form untuk nambah data & memicu Invalidasi Cache */}
+        <AddPostForm />
+
+        <h2 className="text-xl font-bold mb-4 text-slate-800">Daftar Artikel (Di-Cache)</h2>
+        <ul className="space-y-3">
+          {posts.map((post) => (
+            <li key={post.id} className="p-4 bg-white border border-slate-200 rounded shadow-sm text-slate-700 font-medium">
+              ✅ {post.title}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   )
