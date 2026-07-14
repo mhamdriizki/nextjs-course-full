@@ -39,16 +39,6 @@ export default function Navbar() {
         }}>
           Dashboard
       </Link>
-      
-      <Link
-        href="/katalog"
-        style={{
-          color: pathName === "/katalog" ? "#34d399" : "white",
-          fontWeight: pathName === "/katalog" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Katalog
-      </Link>
 
       <Link
         href="/member"

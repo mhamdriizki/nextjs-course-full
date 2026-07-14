@@ -1,4 +1,29 @@
+import { Suspense } from "react"
+
+export async function generateStaticParams() {
+  return[
+    {
+      id: "budi"
+    },
+    {
+      id: "tono"
+    },
+  ]
+}
+
 export default async function HalamanFotoAsli({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  return (
+    <Suspense fallback={<p>Loading . . .</p>}>
+      <FotoAsliContent params={params}/>
+    </Suspense>
+  )
+}
+
+async function FotoAsliContent({
   params
 }: {
   params: Promise<{ id: string }>

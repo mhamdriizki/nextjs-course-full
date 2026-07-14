@@ -1,9 +1,12 @@
 import { PostPreview } from "@/app/type";
+import { cacheLife } from "next/cache";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock get all post
 export async function getPublishedPosts(): Promise<PostPreview[]> {
+  "use cache"
+  cacheLife('blog')
   await delay(1500);
 
   return [
@@ -15,6 +18,8 @@ export async function getPublishedPosts(): Promise<PostPreview[]> {
 
 // Mock get all categories
 export async function getCategories(): Promise<string[]> {
+  "use cache"
+  cacheLife("blog")
   await delay(1000);
   return ["Tutorial", "Tips & Trick", "Berita"];
 }

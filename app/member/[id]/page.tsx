@@ -1,6 +1,33 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-export default async function DetailPage({
+export async function generateStaticParams() {
+  return [
+    {
+      id: "budi"
+    },
+    {
+      id: "andi"
+    },
+    {
+      id: "999"
+    }
+  ]
+}
+
+export default function DetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  return (
+    <Suspense fallback={<p>Loading . . .</p>}>
+      <DetailContent params={params}/>
+    </Suspense>
+  )
+}
+
+async function DetailContent({
   params
 }: {
   params: Promise<{ id: string }>

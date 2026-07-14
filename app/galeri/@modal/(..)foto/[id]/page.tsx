@@ -1,7 +1,32 @@
-export default async function ModalCegatanFoto({
+import { Suspense } from "react";
+
+export async function generateStaticParams() {
+  return[
+    {
+      id: "budi"
+    },
+    {
+      id: "tono"
+    },
+  ]
+}
+
+export default function ModalCegatanFoto({
   params,
 }: {
   params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense fallback={<p>Loading . . .</p>}>
+      <ModalCegatanContent params={params}/>
+    </Suspense>
+  )
+}
+
+async function ModalCegatanContent({
+  params
+}: {
+  params: Promise<{id: string}>
 }) {
   const { id } = await params;
 
@@ -15,7 +40,7 @@ export default async function ModalCegatanFoto({
       <h2 style={{ color: "#047857" }}>PREVIEW FOTO INTERCEPTOR</h2>
       <p style={{ color: "#047857" }}>
         URL di browser berubah jadi <strong>/foto/{id}</strong>, tapi kita nggak pindah ke halaman merah! 
-        Kita cuma "membajak" tampilannya ke dalam sini.
+        Kita cuma memba`jak tampilannya ke dalam sini.
       </p>
     </div>
   );
