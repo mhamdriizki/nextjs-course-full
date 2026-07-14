@@ -3,6 +3,7 @@ import { PostPreview } from "../type"
 import { PostList } from "./components/PostList"
 import { Suspense } from "react";
 import { CategorySidebar } from "./components/CategorySidebar";
+import { LiveViewers } from "./components/LiveViewer";
 
 export default async function BlogPage() {
   console.time("Mengukur waktu fetch");
@@ -17,6 +18,7 @@ export default async function BlogPage() {
       <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
         Artikel Blog
       </h1>
+      <LiveViewers/>
       <p className="text-slate-500 mb-8">
         Trending saat ini: {trendingTags.join(", ")}
       </p>
