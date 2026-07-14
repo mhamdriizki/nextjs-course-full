@@ -1,7 +1,12 @@
 import { PostPreview } from "@/app/type";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const FAKE_DB_POST = [
+  { id: "1", title: "Belajar Next.js" },
+  { id: "2", title: "Belajar Cache Component" },
+]
 
 // Mock get all post
 export async function getPublishedPosts(): Promise<PostPreview[]> {
@@ -28,4 +33,18 @@ export async function getCategories(): Promise<string[]> {
 export async function getTrendingTags(): Promise<string[]> {
   await delay(500);
   throw new Error("Database trending sedang crash");
+}
+
+export async function getPosts() {
+  "use cache";
+
+  cacheTag("blog-posts");
+
+  await new Promise((res) => setTimeout(res, 1500));
+  return FAKE_DB_POST;
+}
+
+export async function addPostToDb(title: string) {
+  const newPost = { id: Date.now().toString(), title: title };
+  FAKE_DB_POST.push(newPost);
 }
