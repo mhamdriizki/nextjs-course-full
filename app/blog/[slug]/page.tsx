@@ -1,11 +1,29 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import CommentSection from "./components/CommentsSection";
+import { getPublishedPosts } from "@/lib/data/blog";
 
-export default async function BlogPostPage({ 
-  params 
-}: { 
-  params: Promise<{slug: string}> 
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
+export default function BlogPostPage({
+  params
+}: {
+  params: Promise<{slug: string}>
+}) {
+  return (
+    <Suspense fallback={<div className="max-w-3xl mx-auto p-8">Loading...</div>}>
+      <BlogPostContent params={params} />
+    </Suspense>
+  )
+}
+
+async function BlogPostContent({
+  params
+}: {
+  params: Promise<{slug: string}>
 }) {
     const {slug} = await params;
 

@@ -1,7 +1,23 @@
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default async function KatalogPage({
+export default function KatalogPage({
+  searchParams
+}: {
+  searchParams: Promise<{
+    query?: string,
+    page?: string
+  }>
+}) {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem' }}>Loading...</div>}>
+      <KatalogContent searchParams={searchParams} />
+    </Suspense>
+  )
+}
+
+async function KatalogContent({
   searchParams
 }: {
   searchParams: Promise<{

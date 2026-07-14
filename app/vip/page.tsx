@@ -1,12 +1,24 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VIPpage() {
-  const data = localStorage.getItem('vip');
+  const router = useRouter();
+  const [isVip, setIsVip] = useState(false);
 
-  if (data !== 'yes') {
-    redirect("/");
+  useEffect(() => {
+    const data = localStorage.getItem('vip');
+
+    if (data !== 'yes') {
+      router.replace("/");
+    } else {
+      setIsVip(true);
+    }
+  }, [router]);
+
+  if (!isVip) {
+    return null;
   }
 
   return (

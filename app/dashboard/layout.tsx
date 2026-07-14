@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 export default function DashboardLayout({
   children,
   recent,
@@ -19,8 +21,12 @@ export default function DashboardLayout({
 
         {/* Konten Slot */}
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <div style={{ flex: 1 }}>{stats}</div>
-          <div style={{ flex: 1 }}>{recent}</div>
+          <div style={{ flex: 1 }}>
+            <Suspense fallback={<p>Loading stats...</p>}>{stats}</Suspense>
+          </div>
+          <div style={{ flex: 1 }}>
+            <Suspense fallback={<p>Loading recent...</p>}>{recent}</Suspense>
+          </div>
         </div>
       </main>
 

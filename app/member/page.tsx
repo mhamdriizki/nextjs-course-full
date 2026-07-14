@@ -1,7 +1,20 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import SearchForm from "../components/SearchForm";
 
-export default async function MemberPage({
+export default function MemberPage({
+  searchParams
+}: {
+  searchParams: Promise<{ crash?: string, query?: string }>
+}) {
+  return (
+    <Suspense fallback={<div style={{ padding: "2rem" }}>Loading...</div>}>
+      <MemberContent searchParams={searchParams} />
+    </Suspense>
+  )
+}
+
+async function MemberContent({
   searchParams
 }: {
   searchParams: Promise<{ crash?: string, query?: string }>

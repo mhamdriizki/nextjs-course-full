@@ -1,6 +1,23 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
-export default async function DetailPage({
+export async function generateStaticParams() {
+  return [{ id: "budi" }, { id: "andi" }, { id: "999" }];
+}
+
+export default function DetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  return (
+    <Suspense fallback={<div style={{ padding: "2rem" }}>Loading...</div>}>
+      <DetailContent params={params} />
+    </Suspense>
+  )
+}
+
+async function DetailContent({
   params
 }: {
   params: Promise<{ id: string }>

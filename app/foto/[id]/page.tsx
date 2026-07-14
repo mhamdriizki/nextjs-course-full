@@ -1,4 +1,22 @@
-export default async function HalamanFotoAsli({
+import { Suspense } from "react";
+
+export async function generateStaticParams() {
+  return [{ id: "budi" }, { id: "tono" }];
+}
+
+export default function HalamanFotoAsli({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
+  return (
+    <Suspense fallback={<div style={{padding: '4rem', minHeight: '100vh'}}>Loading...</div>}>
+      <FotoAsliContent params={params} />
+    </Suspense>
+  )
+}
+
+async function FotoAsliContent({
   params
 }: {
   params: Promise<{ id: string }>

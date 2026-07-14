@@ -1,4 +1,22 @@
-export default async function ModalCegatanFoto({
+import { Suspense } from "react";
+
+export async function generateStaticParams() {
+  return [{ id: "budi" }, { id: "tono" }];
+}
+
+export default function ModalCegatanFoto({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense fallback={<div style={{ marginTop: "2rem", padding: "2rem" }}>Loading...</div>}>
+      <ModalCegatanFotoContent params={params} />
+    </Suspense>
+  );
+}
+
+async function ModalCegatanFotoContent({
   params,
 }: {
   params: Promise<{ id: string }>;

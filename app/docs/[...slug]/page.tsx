@@ -1,4 +1,22 @@
-export default async function DocsPage({
+import { Suspense } from "react";
+
+export async function generateStaticParams() {
+  return [{ slug: ["getting-started"] }];
+}
+
+export default function DocsPage({
+  params
+}: {
+  params: Promise<{ slug: string[] }>
+}) {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem' }}>Loading...</div>}>
+      <DocsContent params={params} />
+    </Suspense>
+  )
+}
+
+async function DocsContent({
   params
 }: {
   params: Promise<{ slug: string[] }>
