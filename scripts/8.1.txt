@@ -1,0 +1,60 @@
+Script Monolog Presentasi: Modul 8.1 - Prinsip Server-First State
+
+(Note untuk Instruktur: Baca script ini dengan intonasi santai tapi tegas. Bayangkan lo lagi ngobrol sama junior developer di cafe).
+
+Slide 1: Judul & Tujuan Pembelajaran
+
+"Halo Bro & Sis! Selamat datang di Modul 8. Hari ini kita bakal ngebahas topik yang sering bikin developer React berantem: State Management.
+
+Dulu, zaman kita pakai React murni, dikit-dikit kita pasti nulis useState, useEffect, atau buru-buru nginstall Redux atau Zustand. Di Next.js 16, mindset itu harus dibuang jauh-jauh! Malam ini, kita bakal belajar prinsip 'Server-First'. Kita bakal sulap URL jadi gudang data, dan kita bakal cobain sihir baru dari React 19 yaitu useOptimistic."
+
+Slide 2: Checklist Sebelum Pakai useState / Zustand
+
+"Coba angkat tangan, siapa di sini yang kalau disuruh bikin fitur pencarian, jari-jarinya otomatis langsung ngetik const [search, setSearch] = useState('')? (Tunggu reaksi student).
+
+Mulai detik ini, tahan jari kalian! Sebelum nulis useState atau bikin global store pakai Zustand, tanyakan 4 hal ini ke diri kalian:
+
+Pertama: Ini datanya dari database bukan? Kalau iya, jangan taruh di state. Taruh di Server Component. Langsung fetch di sana.
+Kedua: Ini data filter atau search yang bakal di-share ke orang lain nggak? Kalau iya, taruh di URL.
+Ketiga: Ini data yang berubah gara-gara user ngeklik tombol 'Delete' atau 'Create'? Kalau iya, pakai Server Action + updateTag yang kita pelajarin minggu lalu.
+
+Kalau 3 syarat itu udah nggak terpenuhi (misal cuma buat ngetik password sementara di form), BARU kalian boleh pakai useState."
+
+Slide 3: URL Sebagai Global State (Underrated Pattern)
+
+"Sekarang kita bahas rahasia terbesar yang sering diremehin developer: URL Browser kalian itu adalah State Manager terbaik di dunia!
+
+Bayangin kalian lagi di Tokopedia, nyari 'Sepatu Nike', warna 'Merah', urutkan 'Termurah'. Kalau kalian simpan data pencarian itu di useState, pas kalian refresh halamannya (F5), datanya HILANG! Balik lagi ke awal. Terus kalau link-nya kalian copy dan kirim ke WhatsApp temen, temen kalian cuma bakal ngelihat halaman kosong tanpa filter. Kesel kan?
+
+Solusinya: Taruh di URL Query String. Contohnya: ?q=nike&color=merah.
+Keuntungannya? Linknya bisa di-share, bisa di-bookmark, Google SEO seneng karena bisa baca halamannya, dan tombol 'Back' di browser kalian bakal berfungsi dengan sempurna."
+
+Slide 4: useOptimistic (React 19 Magic)
+
+"Nah, terus gimana dengan interaksi yang butuh cepat? Misal tombol 'Like' di Instagram atau TikTok. Kalau nunggu server nyimpen datanya dulu baru angkanya nambah, rasanya bakal laggy dan lemot.
+
+Dulu, kita ngakalin ini pakai Zustand atau kode useState yang ribet banget buat error handling-nya. Di Next.js 16 yang udah pakai React 19, kita dikasih sihir baru namanya useOptimistic.
+
+Cara kerjanya gini: Pas user nge-klik tombol 'Like', UI-nya langsung kita ubah seketika (Optimis pasti berhasil). Di balik layar (background), kita suruh server nyimpen datanya. Nah, ajaibnya... kalau servernya error atau internet user lagi putus, si useOptimistic ini bakal otomatis membatalkan (rollback) angka 'Like' tadi ke angka semula, tanpa kita perlu nulis kode if-error manual! Keren banget kan?"
+
+Slide 5: Kapan Baru Boleh Pakai Context / Zustand?
+
+"Terus, lo pada mungkin nanya, 'Min, kalau gitu Zustand atau React Context udah nggak kepake dong?'
+
+Bukan nggak kepake bro, tapi porsinya jadi jauh lebih sedikit. Kita cuma pakai Context atau Zustand untuk sisa-sisa fitur UI yang memang murni hidup di browser (Client) dan harus diakses di banyak tempat sekaligus.
+
+Contoh yang paling valid:
+
+Tombol Dark Mode / Light Mode.
+
+Keranjang Belanja (Shopping Cart) di pojok kanan atas yang isinya nggak boleh hilang walaupun kita pindah-pindah halaman.
+
+Form pendaftaran yang panjangnya sampai 3 halaman (Multi-step wizard).
+
+Di luar itu? Kembali ke hukum asal: Taruh di Server, atau taruh di URL!"
+
+Slide 6: Masuk ke Sesi Live Coding
+
+"Biar nggak cuma teori, sekarang buka VSCode kalian!
+
+Di fitur Blog yang kita bikin kemarin, form pencariannya masih pakai useState yang jadul. Kita bakal ngelakuin 'Ruqyah Kode' malam ini. Kita bakal pretelin useState-nya, kita pindahin statenya ke URL, dan sebagai penutup, kita bakal bikin tombol Like anti-lemot pakai useOptimistic. Sikat!"

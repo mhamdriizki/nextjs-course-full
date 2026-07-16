@@ -6,13 +6,13 @@ import { LiveViewers } from "./components/LiveViewer";
 import { PopularPosts } from "./components/PopularPosts";
 import { AddPostForm } from "./components/AddPostForm";
 
-export default async function BlogPage() {
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
   // Panggil data post
   const posts = await getPosts();
-
-  console.time("Mengukur waktu fetch");
-  const post = await getPublishedPosts();
-  console.timeEnd("Mengukur waktu fetch")
 
   return (
     <div className="max-w-5xl mx-auto p-8">
@@ -29,7 +29,10 @@ export default async function BlogPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Post (kolom di kiri) */}
         <div className="md:col-span-2">
-          <PostList post={post}/>
+          {/* searchParams adalah runtime data → wajib di dalam Suspense */}
+          <Suspense fallback={<p className="text-slate-500">Loading artikel . . .</p>}>
+            <FilteredPostList searchParams={searchParams} />
+          </Suspense>
 
           <PopularPosts/>
         </div>
@@ -67,6 +70,22 @@ export default async function BlogPage() {
       </div>
     </div>
   )
+}
+
+async function FilteredPostList({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
+  const { filter = "all" } = await searchParams;
+
+  console.time("Mengukur waktu fetch");
+  const post = await getPublishedPosts();
+  console.timeEnd("Mengukur waktu fetch")
+
+  const filteredPosts = filter === "published" ? post.filter((p) => p.published) : post;
+
+  return <PostList post={filteredPosts} activeFilter={filter} />;
 }
 
 async function TrendingTags() {

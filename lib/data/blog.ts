@@ -8,16 +8,32 @@ export const FAKE_DB_POST = [
   { id: "2", title: "Belajar Cache Component" },
 ]
 
+// Mock like state (data mutasi user, dipisah dari cache "use cache")
+const POST_LIKES: Record<string, { liked: boolean; likeCount: number }> = {
+  "1": { liked: false, likeCount: 12 },
+  "2": { liked: true, likeCount: 8 },
+  "3": { liked: false, likeCount: 0 },
+};
+
+export async function toggleLikeInDb(postId: string) {
+  await delay(400); // simulasi network
+  const current = POST_LIKES[postId];
+  current.liked = !current.liked;
+  current.likeCount += current.liked ? 1 : -1;
+  return current;
+}
+
 // Mock get all post
 export async function getPublishedPosts(): Promise<PostPreview[]> {
   "use cache"
   cacheLife('blog')
+  cacheTag("blog-posts")
   await delay(1500);
 
   return [
-    { id: "1", title: "Belajar Next.js", slug: "belajar-next", published: true },
-    { id: "2", title: "Memahami App Router", slug: "memahami-app-router", published: true },
-    { id: "3", title: "Server Components", slug: "server-components", published: false }
+    { id: "1", title: "Belajar Next.js", slug: "belajar-next", published: true, ...POST_LIKES["1"] },
+    { id: "2", title: "Memahami App Router", slug: "memahami-app-router", published: true, ...POST_LIKES["2"] },
+    { id: "3", title: "Server Components", slug: "server-components", published: false, ...POST_LIKES["3"] }
   ]
 }
 

@@ -6,9 +6,11 @@ export interface BlogPost {
   published: boolean;
   viewCount: number;
   createdAt: Date;
+  liked: boolean;
+  likeCount: number;
 }
 
-export type PostPreview = Pick<BlogPost, "id" | "title" | "slug" | "published">
+export type PostPreview = Pick<BlogPost, "id" | "title" | "slug" | "published" | "liked" | "likeCount">
 
 // optional
 export type ActionResult<T> = 
