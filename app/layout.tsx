@@ -4,15 +4,20 @@ import { Figtree } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { UserProvider } from "./context/UserContext";
+import { UserStoreProvider } from "./providers/user-store-provider";
+import { getCurrentMember } from "@/lib/data/member";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode
 }) {
+  // Server Component: fetch initial member lalu pass ke Store Factory Provider sebagai props.
+  const currentMember = await getCurrentMember();
+
   return (
     // Wajib tambahkan suppressHydrationWarning untuk mencegah React panik kalau tema server beda 
     // dengan tema browser user
@@ -27,15 +32,20 @@ export default function RootLayout({
                 tapi children (Navbar & main) sendiri tetap Server Component
                 kecuali yang memang sudah "use client" (Navbar, UserBadge). */}
             <UserProvider>
-              <Navbar/>
+              {/* UserStoreProvider = versi Zustand Store Factory dari pola yang sama.
+                  Dipakai berdampingan dengan UserProvider (Context, dari Modul 8.2)
+                  supaya bisa dibandingkan langsung di /gym-classes. */}
+              <UserStoreProvider initialMember={currentMember}>
+                <Navbar/>
 
-              <main style={{ padding: '2rem', minHeight: '80vh'}}>
-                {children}
-              </main>
+                <main style={{ padding: '2rem', minHeight: '80vh'}}>
+                  {children}
+                </main>
 
-              <footer style={{textAlign: 'center'}}>
-                &copy; 2026 EasyCoding Next.JS
-              </footer>
+                <footer style={{textAlign: 'center'}}>
+                  &copy; 2026 EasyCoding Next.JS
+                </footer>
+              </UserStoreProvider>
             </UserProvider>
         </ThemeProvider>
       </body>

@@ -1,0 +1,32 @@
+Script Monolog Presentasi: Modul 8.3 - Zustand di Next.js
+
+(Note untuk Instruktur: Pas bawain materi ini, pasang wajah agak serius di awal pas bahas "Data Leak", lalu bawa ke nada antusias pas ngasih solusinya).
+
+Slide 1: Judul & Tujuan Pembelajaran
+
+"Halo Bro & Sis! Selamat datang di bos terakhir State Management: Zustand. Kalau React Context kemaren ibarat mobil manual yang bikin pegel karena re-render di mana-mana, Zustand ini ibarat Tesla. Otomatis, ngebut, dan kodenya pendek banget. Malam ini kita bakal belajar cara pakai Zustand di Next.js 16 tanpa bikin web kita kena hack atau error layar putih!"
+
+Slide 2: Bahaya Tersembunyi (Global Store di SSR)
+
+"Gue mau kasih warning keras. Siapa di sini yang udah pernah pakai Zustand di React/Vite? Kalian pasti terbiasa bikin file store.ts, ketik create(), lalu panggil di mana-mana kan?
+
+Di Next.js, JANGAN PERNAH LAKUKAN ITU untuk data yang sensitif (kayak data User Login)!
+Kenapa? Karena Next.js itu jalan di Server Node.js. Server itu cuma jalan SEKALI dan memproses ribuan request dari orang yang beda-beda. Kalau kalian bikin Global Store, itu ibarat kalian naruh KTP kalian di meja kasir. User A login, datanya masuk store. Detik berikutnya User B buka web, eh dia malah ngelihat nama User A! Ini namanya Data Leaking (Kebocoran Data) di SSR."
+
+Slide 3: Solusinya: Store Factory
+
+"Terus gimana dong cara amannya? Kalau untuk data sensitif, Zustand punya pola resmi namanya Store Factory.
+
+Intinya, daripada kita bikin satu store raksasa buat semua orang, kita bikin pabriknya (factory). Jadi tiap kali ada user buka web, pabrik ini bakal nyetakin store baru khusus buat user itu doang, lalu dikirim ke komponen pakai bantuan React Context. Jadi datanya 100% aman dan terisolasi!"
+
+Slide 4 & 5: Zustand Middleware (Persist) & Hydration Error
+
+"Tapi tenang, nggak semua data butuh Store Factory. Kalau datanya cuma data sepele yang murni hidup di browser (misalnya: Shopping Cart atau Pilihan Tema), kita boleh pakai cara biasa.
+
+Malam ini kita bakal bahas middleware paling magis di Zustand namanya persist. Fitur ini otomatis nyimpen data kalian ke LocalStorage. Jadi webnya di-refresh sejuta kali pun, isi keranjangnya nggak bakal hilang!
+
+TAPI, ada musuh besar menanti: Hydration Mismatch. Next.js itu nge-gambar HTML di server (di mana keranjangnya kosong / 0). Pas nyampe di browser, keranjangnya ternyata isi 5. React bakal panik karena server dan browser beda jawaban, akhirnya keluar error merah di konsol. Gimana cara fix-nya? Nanti kita buktikan di Live Coding!"
+
+Slide 6: Masuk ke Sesi Live Coding
+
+"Biar nggak pusing bayangin teorinya, buka VSCode kalian! Kita bakal install Zustand malam ini. Kita bakal bikin fitur Keranjang Kelas Gym pakai persist. Kita bakal sengajain bikin Hydration Error, lalu kita fix pakai trik standar industri. Sikat!"
