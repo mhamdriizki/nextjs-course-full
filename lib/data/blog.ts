@@ -8,6 +8,22 @@ export const FAKE_DB_POST = [
   { id: "2", title: "Belajar Cache Component" },
 ]
 
+// Mock like state (data mutasi user, dipisah dari cache)
+const POST_LIKES: Record<string, {liked: boolean, likeCount: number}> = {
+  "1": { liked: false, likeCount: 12 },
+  "2": { liked: true, likeCount: 1 },
+  "3": { liked: false, likeCount: 0 },
+}
+
+export async function toggleLikeInDb(postId: string) {
+  await delay(400);
+  const current = POST_LIKES[postId];
+  current.liked = !current.liked;
+  current.likeCount += current.liked? 1: -1;
+  return current;
+}
+
+
 // Mock get all post
 export async function getPublishedPosts(): Promise<PostPreview[]> {
   "use cache"

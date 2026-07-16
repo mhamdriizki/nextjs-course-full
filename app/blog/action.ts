@@ -1,6 +1,6 @@
 "use server";
 
-import { addPostToDb } from "@/lib/data/blog";
+import { addPostToDb, toggleLikeInDb } from "@/lib/data/blog";
 import { updateTag } from "next/cache";
 
 export async function createPostAction(formData: FormData) {
@@ -12,4 +12,10 @@ export async function createPostAction(formData: FormData) {
 
   // 2. destroy cache berdasarkan label
   updateTag("blog-posts")
+}
+
+export async function toggleLikeAction(postId: string) {
+  const result = await toggleLikeInDb(postId);
+  updateTag("blog-posts");
+  return result;
 }

@@ -3,48 +3,40 @@
 import { PostPreview } from "@/app/type"
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { FilterButton } from "./FilterButton";
+import { LikeButton } from "./LikeButton";
 
 interface PostListProps {
   post: PostPreview[];
+  activeFilter: string;
 }
 
 export function PostList({
-  post
+  post,
+  activeFilter
 }: PostListProps) {
-  // Declare data atau const
-  const [filter, setFilter] = useState<"all" | "published">("all");
-
-  const filteredPosts = filter === "all" ? post : post.filter((p) => p.published === true);
 
   return (
     <div className="mt-4">
-      {/* Kontrol filter */}
-      <div className="mb-6 flex gap-2">
-        <Button
-          onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded ${filter === 'all' ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
-            Semua Artikel
-        </Button>
-
-        <Button
-          onClick={() => setFilter("published")}
-          className={`px-4 py-2 rounded ${filter === 'published' ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
-            Sudah Terbit
-        </Button>
-      </div>
+      {/* Kontrol filter baru */}
+      <FilterButton activeFilter={activeFilter}/>
 
       {/* Menampilkan data */}
       <div className="grid gap-4">
-        {filteredPosts.map((post) => (
-          <div key={post.id} className="p-4 border rounded-lg bg-white shadow-sm">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold text-slate-800">{post.title}</h3>
-              <span className={`text-xs px-2 py-1 rounded-full ${post.published ? 'bg-green-100 text-green-800}' : 'bg-yellow-100 text-yellow-800'}`}>
-                {post.published ? 'Published' : 'Draft'}
-              </span>
-            </div>
+        {post.map((p) => (
+          <div 
+            key={p.id}
+            className="p-4 border rounded-lg bg-white shadow-sm">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-bold tex-slate-800">{p.title}</h3>
+                <span className={`text-xs px-2 py-1 rounded-full ${p.published ? 'bg-green-100 text-green-800}' : 'bg-yellow-100 text-yellow-800'}`}>
+                  {p.published ? 'Published' : 'Draft'}
+                </span>
+              </div>
 
-            <p className="text-sm text-gray-500 mt-1">Slug: /{post.slug}</p>
+              <p className="text-sm text-gray-500 mt-1">Slug: /{p.slug}</p>
+              <LikeButton postId={p.id} initialLiked={p.liked} likeCount={p}/>
+
           </div>
         ))}
       </div>
