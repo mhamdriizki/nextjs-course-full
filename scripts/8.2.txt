@@ -1,0 +1,39 @@
+Script Monolog Presentasi: Modul 8.2 - React Context di App Router
+
+(Note untuk Instruktur: Bawa materi ini dengan nada misterius di awal, seakan-akan ngasih tahu sebuah rahasia besar di Next.js).
+
+Slide 1: Judul & Tujuan Pembelajaran
+
+"Halo Bro & Sis! Setelah di 8.1 kita babat habis state yang nggak penting pakai URL, sekarang kita bahas sisa state yang bener-bener harus global. Misalnya: Data User yang lagi login.
+
+Di React biasa, jawaban otomatis kita pasti: React Context. Tapi pertanyaannya, Context itu barangnya browser (Client). Sementara Next.js 16 itu jalannya di Server. Gimana cara ngegabungin dua dunia yang beda ini tanpa bikin web kita meledak? Malam ini kita bedah tuntas!"
+
+Slide 2: Keterbatasan Context di App Router
+
+"Ini hukum alam pertama di Next.js App Router: Kalian HARAM hukumnya memanggil useContext di dalam Server Component.
+
+Kenapa? Karena Server Component itu cuma fungsi statis yang jalan sekali di server, lalu berubah jadi HTML mati. Dia nggak punya memori, nggak punya nyawa buat nangkep perubahan state. Jadi, kalau kalian mau bikin Provider atau manggil Context, file tersebut wajib dikasih stiker sakti: "use client" di baris paling atas."
+
+Slide 3: Pola 'Donat Bolong' (Children Pattern)
+
+"Nah, di sini letak jebakannya. Kalau Provider kita butuh "use client", terus Provider itu kan biasanya ditaruh di layout.tsx buat ngebungkus seluruh aplikasi... Apakah kita harus ngasih "use client" di layout.tsx? JANGAN PERNAH LAKUKAN ITU! Kalau kalian lakuin itu, seluruh web kalian jadi Client Component. SEO hancur, performa anjlok.
+
+Solusinya adalah pola Composition atau Donat Bolong. Kita bikin Provider-nya di file terpisah (sebagai donatnya). Lalu di layout.tsx, kita masukin halaman server kita ke lubang donatnya (sebagai children). Ajaibnya, Next.js cukup pintar buat ngerti: 'Oh, Provider-nya doang yang jalan di browser, tapi isi di dalamnya (children) tetep murni dari server!'"
+
+Slide 4 & 5: Kapan Context Cukup? (Dan Masalah Re-render)
+
+"Terus, kalau udah bisa pakai Context, kenapa orang-orang pada heboh pindah ke Zustand?
+
+Gini bro. Context itu punya satu kelemahan fatal: Re-render Hell (Neraka Render). Bayangin kalian punya satu Context raksasa yang isinya Data User, Data Keranjang Belanja, dan Data Tema (Dark/Light). Kalau ada user yang ngeklik tombol 'Ganti Tema', komponen 'Keranjang Belanja' kalian bakal ikut ke-render ulang, padahal dia nggak ada urusannya sama tema!
+
+Jadi, aturan mainnya:
+
+Pakai Context kalau datanya jarang berubah (Misal: Tema, Data User Login).
+
+Kalau terpaksa pakai Context, pecah jadi kecil-kecil (UserContext sendiri, CartContext sendiri).
+
+Kalau datanya sering banget berubah secara brutal (misal angka di keranjang belanja), tinggalin Context. Kita harus naik level ke Zustand!"
+
+Slide 6: Masuk ke Sesi Live Coding
+
+"Biar kepala nggak ngebul cuma denger teori, mari kita buktikan. Buka VSCode kalian! Kita bakal bikin sebuah UserContext buat nyimpen nama Member Gym yang lagi login. Kita bakal praktekin pola 'Donat Bolong' di layout.tsx biar web kita tetep ngebut di Server, tapi punya memori global di Client. Sikat!"
