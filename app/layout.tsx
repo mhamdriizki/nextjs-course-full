@@ -3,6 +3,7 @@ import './globals.css';
 import { Figtree } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { UserProvider } from "./context/UserContext";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
 
@@ -22,15 +23,17 @@ export default function RootLayout({
           defaultTheme='system'
           enableSystem
           disableTransitionOnChange>
-            <Navbar/>
+            <UserProvider>
+              <Navbar/>
+              
+              <main style={{ padding: '2rem', minHeight: '80vh'}}>
+                {children}
+              </main>
 
-            <main style={{ padding: '2rem', minHeight: '80vh'}}>
-              {children}
-            </main>
-
-            <footer style={{textAlign: 'center'}}>
-              &copy; 2026 EasyCoding Next.JS
-            </footer>
+              <footer style={{textAlign: 'center'}}>
+                &copy; 2026 EasyCoding Next.JS
+              </footer>
+            </UserProvider>
         </ThemeProvider>
       </body>
     </html>

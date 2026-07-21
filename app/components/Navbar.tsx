@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "./ThemeToggle";
+import { UserBadge } from "./UserBadge";
 
 export default function Navbar() {
   const pathName = usePathname();
@@ -51,6 +52,10 @@ export default function Navbar() {
       </Link>
 
       <ThemeToggle/>
+
+      <div style={{ marginLeft: 'auto' }}>
+        <UserBadge/>
+      </div>
 
     </nav>
   )
