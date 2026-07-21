@@ -31,9 +31,9 @@ export async function getPublishedPosts(): Promise<PostPreview[]> {
   await delay(1500);
 
   return [
-    { id: "1", title: "Belajar Next.js", slug: "belajar-next", published: true },
-    { id: "2", title: "Memahami App Router", slug: "memahami-app-router", published: true },
-    { id: "3", title: "Server Components", slug: "server-components", published: false }
+    { id: "1", title: "Belajar Next.js", slug: "belajar-next", published: true, liked: false, likeCount: 12 },
+    { id: "2", title: "Memahami App Router", slug: "memahami-app-router", published: true, liked: true, likeCount: 1 },
+    { id: "3", title: "Server Components", slug: "server-components", published: false, liked: false, likeCount: 0 }
   ]
 }
 

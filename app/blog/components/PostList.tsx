@@ -35,7 +35,7 @@ export function PostList({
               </div>
 
               <p className="text-sm text-gray-500 mt-1">Slug: /{p.slug}</p>
-              <LikeButton postId={p.id} initialLiked={p.liked} likeCount={p}/>
+              <LikeButton postId={p.id} initialLiked={p.liked} likeCount={p.likeCount}/>
 
           </div>
         ))}
