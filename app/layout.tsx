@@ -4,15 +4,19 @@ import { Figtree } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { UserProvider } from "./context/UserContext";
+import { UserStoreProvider } from "./provider/user-store-provider";
+import { getCurrentMember } from "@/lib/data/member";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode
 }) {
+  const initialMember = await getCurrentMember();
+
   return (
     // Wajib tambahkan suppressHydrationWarning untuk mencegah React panik kalau tema server beda 
     // dengan tema browser user
@@ -24,15 +28,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
             <UserProvider>
-              <Navbar/>
-              
-              <main style={{ padding: '2rem', minHeight: '80vh'}}>
-                {children}
-              </main>
+              <UserStoreProvider initialMember={initialMember}>
+                <Navbar/>
 
-              <footer style={{textAlign: 'center'}}>
-                &copy; 2026 EasyCoding Next.JS
-              </footer>
+                <main style={{ padding: '2rem', minHeight: '80vh'}}>
+                  {children}
+                </main>
+
+                <footer style={{textAlign: 'center'}}>
+                  &copy; 2026 EasyCoding Next.JS
+                </footer>
+              </UserStoreProvider>
             </UserProvider>
         </ThemeProvider>
       </body>

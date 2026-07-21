@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "./ThemeToggle";
 import { UserBadge } from "./UserBadge";
+import { CartBadge } from "./CartBadge";
 
 export default function Navbar() {
   const pathName = usePathname();
@@ -51,9 +52,20 @@ export default function Navbar() {
           Member
       </Link>
 
+      <Link
+        href="/gym"
+        style={{
+          color: pathName === "/member" ? "#34d399" : "white",
+          fontWeight: pathName === "/member" ? "bold" : "normal",
+          textDecoration: "none"
+        }}>
+          Gym Classes
+      </Link>
+
       <ThemeToggle/>
 
-      <div style={{ marginLeft: 'auto' }}>
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <CartBadge/>
         <UserBadge/>
       </div>
 
