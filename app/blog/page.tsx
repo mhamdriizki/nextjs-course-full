@@ -5,17 +5,22 @@ import { CategorySidebar } from "./components/CategorySidebar";
 import { LiveViewers } from "./components/LiveViewer";
 import { PopularPosts } from "./components/PopularPosts";
 import { AddPostForm } from "./components/AddPostForm";
+import { db } from "@/lib/db";
 
 export default async function BlogPage({
   searchParams
 }: {
   searchParams: Promise<{ filter?: string}>
 }) {
+  // Ambil data user
+  const userCount = await db.user.count();
+  
   // Panggil data post
   const posts = await getPosts();
 
   return (
     <div className="max-w-5xl mx-auto p-8">
+      <h1>Jumlah user di database : {userCount}</h1>
       <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
         Artikel Blog
       </h1>
