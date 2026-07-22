@@ -35,7 +35,8 @@ model Post {
   id        String  @id @default(cuid())
   title     String
   slug      String  @unique
-  contet    String
+  content   String
+  excerpt   String?
   published Boolean @default(false)
   viewCount Int     @default(0)
 
