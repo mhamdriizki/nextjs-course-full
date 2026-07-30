@@ -21,8 +21,20 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts    Post[]
-  comments Comment[]
+  posts       Post[]
+  comments    Comment[]
+  preferences UserPreferences?
+}
+
+model UserPreferences {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  theme         String  @default("system")
+  emailNotified Boolean @default(true)
+
+  updatedAt DateTime @updatedAt
 }
 
 enum UserRole {
@@ -45,8 +57,9 @@ model Post {
 
   comments Comment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
 
 model Comment {
