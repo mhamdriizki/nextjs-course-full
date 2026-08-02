@@ -21,18 +21,51 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts    Post[]
-  comments Comment[]
+  posts       Post[]
+  comments    Comment[]
   preferences UserPreferences?
+
+  // Bab 7 — relasi buat demo transaction (follower -> notifikasi)
+  notifications Notification[]
+  following     Follow[]       @relation("Follower")
+  followers     Follow[]       @relation("Following")
+}
+
+model Follow {
+  id String @id @default(cuid())
+
+  followerId String
+  follower   User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Notification {
+  id      String  @id @default(cuid())
+  message String
+  read    Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
 
 model UserPreferences {
-  id String @id @default(cuid())
-  userId String @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme String @default("system")
-  emailNotified Boolean @default(true)
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme         String   @default("system")
+  emailNotified Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
 }
 
 enum UserRole {
@@ -47,16 +80,18 @@ model Post {
   slug      String  @unique
   content   String?
   excerpt   String
+  category  String?
   published Boolean @default(false)
   viewCount Int     @default(0)
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  comments Comment[]
+  comments      Comment[]
+  notifications Notification[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 }
 
