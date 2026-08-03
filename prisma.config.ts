@@ -11,6 +11,12 @@ export default defineConfig({
   },
   datasource: {
     url: env("DATABASE_URL"),
+    // Catatan: `directUrl` TIDAK ada di tipe `Datasource` milik
+    // @prisma/config versi 7.9.0 ini (cuma `url` & `shadowDatabaseUrl`).
+    // Kalau nanti pakai pooler (Neon/Supabase) dan butuh direct connection
+    // khusus buat migrate, override DATABASE_URL lewat env var saat
+    // menjalankan command migrate saja, contoh:
+    //   DATABASE_URL="$DIRECT_URL" bunx prisma migrate deploy
   },
 });
 
