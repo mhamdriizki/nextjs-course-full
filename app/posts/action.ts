@@ -4,6 +4,7 @@ import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { createPostSchema } from "@/lib/validations/post";
 
 const DEMO_AUTHOR_EMAIL = "rizki@email.com"
 
@@ -21,19 +22,32 @@ async function getOrCreateDemoAuthor() {
   });
 }
 
-export async function createPostAction(formData: FormData) {
-  const title = formData.get("title") as string;
-  const slug = formData.get("slug") as string;
-  const excerpt = formData.get("excerpt") as string;
-  const content = formData.get("content") as string;
+export type CreatePostActionState = {
+  errors?: Record<string, string[] | undefined>;
+  success?: boolean;
+};
 
-  if (!title || !slug || !excerpt) return;
+export async function createPostAction(
+  _prevState: CreatePostActionState,
+  formData: FormData
+): Promise<CreatePostActionState> {
+  // safeParse — TIDAK throw, aman dipakai langsung di Server Action.
+  const result = createPostSchema.safeParse({
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    excerpt: formData.get("excerpt"),
+    content: formData.get("content") || undefined,
+  });
 
+  if (!result.success) {
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  // result.data sudah typed dan validated — tidak perlu cast/validasi manual lagi.
   const author = await getOrCreateDemoAuthor();
-  await createPost({
-    title, slug, excerpt, content: content || undefined, authorId: author.id
-  })
+  await createPost({ ...result.data, authorId: author.id });
   revalidatePath("/posts");
+  return { success: true };
 }
 
 export async function publishPostAction(id: string) {

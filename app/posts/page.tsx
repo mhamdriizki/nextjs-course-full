@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { createPostAction, publishPostAction, softDeletePostAction } from "./action";
+import { publishPostAction, softDeletePostAction } from "./action";
+import { CreatePostForm } from "./CreatePostForm";
 import { connection } from "next/server";
 import { getPosts, listPublishPosts } from "@/lib/data/post";
 import { db } from "@/lib/db";
@@ -19,16 +20,7 @@ export default function PostsPage({
         <p>Halaman ini contoh nyata dari createPost, updatePost, softDelete</p>
       </div>
 
-      <form action={createPostAction} className="space-y-2 border rounded-lg p-4">
-        <input type="text" name="title" placeholder="Judul" className="border p-2 w-full rounded" required />
-        <input type="text" name="slug" placeholder="Slug (harus unik)" className="border p-2 w-full rounded" required />
-        <input type="text" name="excerpt" placeholder="Excerpt" className="border p-2 w-full rounded" required />
-        <textarea name="content" placeholder="Konten (opsional)" className="border p-2 w-full rounded"/>
-
-        <button type="submit" className="bg-slate-900 text-white px-4 py-2 rounded">
-          Buat Post
-        </button>
-      </form>
+      <CreatePostForm />
 
       <div className="border-t pt-6">
         <h2 className="font-semibold">Jelajah post</h2>
