@@ -3,8 +3,11 @@
 import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { db } from "@/lib/db";
+import { ActionResult } from "@/lib/validation/action-result";
 import { createPostSchema } from "@/lib/validation/post";
 import { revalidatePath } from "next/cache";
+
+import { flattenError } from "zod";
 
 const DEMO_AUTHOR_EMAIL = "rizki@email.com"
 
@@ -22,15 +25,17 @@ async function getOrCreateDemoAuthor() {
   });
 }
 
-export type CreatePostActionState = {
-  errors?: Record<string, string[]> | undefined;
-  success?: boolean;
-}
+// export type CreatePostActionState = {
+//   errors?: Record<string, string[]> | undefined;
+//   success?: boolean;
+// }
+
+type CreatedPost = Awaited<ReturnType<typeof createPost>>;
 
 export async function createPostAction(
-  _prevState: CreatePostActionState,
+  _prevState: ActionResult<CreatedPost> | null,
   formData: FormData
-): Promise<CreatePostActionState> {
+): Promise<ActionResult<CreatedPost>> {
   const result = createPostSchema.safeParse({
     title: formData.get("title"),
     slug: formData.get("slug"),
@@ -39,14 +44,14 @@ export async function createPostAction(
   })
 
   if (!result.success) {
-    return { errors: result.error.flatten().fieldErrors };
+    return { success: false, errors: flattenError(result.error).fieldErrors}
   }
 
   const author = await getOrCreateDemoAuthor();
 
-  await createPost({ ...result.data, authorId: author.id });
+  const post = await createPost({ ...result.data, authorId: author.id })
   revalidatePath("/posts");
-  return { success: true };
+  return { success: true, data: post };
 }
 
 export async function publishPostAction(id: string) {

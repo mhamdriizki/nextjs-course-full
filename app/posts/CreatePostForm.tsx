@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import { createPostAction, CreatePostActionState } from "./action";
-
-const initialState: CreatePostActionState = {};
+import { createPostAction } from "./action";
 
 export function CreatePostForm() {
-  const [state, formAction, isPending] = useActionState(createPostAction, initialState);
+  const [state, formAction, isPending] = useActionState(createPostAction, null);
+
+  const errors = state && !state.success ? state.errors : undefined;
 
   return (
     <form action={formAction} className="space-y-2 border rounded-lg p-4">
@@ -17,8 +17,8 @@ export function CreatePostForm() {
           placeholder="Judul Post"
           className="border p-2 w-full rounded"/>
 
-          {state.errors?.title && (
-            <p className="text-red-500 text-xs mt-1">{state.errors.title[0]}</p>
+          {errors?.title && (
+            <p className="text-red-500 text-xs mt-1">{errors.title[0]}</p>
           )}
       </div>
 
@@ -29,8 +29,8 @@ export function CreatePostForm() {
           placeholder="Slug"
           className="border p-2 w-full rounded"/>
 
-          {state.errors?.slug && (
-            <p className="text-red-500 text-xs mt-1">{state.errors.slug[0]}</p>
+          {errors?.slug && (
+            <p className="text-red-500 text-xs mt-1">{errors.slug[0]}</p>
           )}
       </div>
 
@@ -41,8 +41,8 @@ export function CreatePostForm() {
           placeholder="Ringkasan"
           className="border p-2 w-full rounded"/>
 
-          {state.errors?.excerpt && (
-            <p className="text-red-500 text-xs mt-1">{state.errors.excerpt[0]}</p>
+          {errors?.excerpt && (
+            <p className="text-red-500 text-xs mt-1">{errors.excerpt[0]}</p>
           )}
       </div>
 
@@ -53,8 +53,8 @@ export function CreatePostForm() {
           placeholder="Konten"
           className="border p-2 w-full rounded"/>
 
-          {state.errors?.content && (
-            <p className="text-red-500 text-xs mt-1">{state.errors.content[0]}</p>
+          {errors?.content && (
+            <p className="text-red-500 text-xs mt-1">{errors.content[0]}</p>
           )}
       </div>
 
@@ -65,7 +65,7 @@ export function CreatePostForm() {
         {isPending ? "Menyimpan..." : "Simpan Post"}
       </button>
 
-      {state.success && <p className="text-green-500 text-sm">Post berhasil dibuat</p>}
+      {state?.success && <p className="text-green-500 text-sm">Post berhasil dibuat</p>}
     </form>
   )
 }
