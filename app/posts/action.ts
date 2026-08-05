@@ -3,6 +3,7 @@
 import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { db } from "@/lib/db";
+import { createPostSchema } from "@/lib/validation/post";
 import { revalidatePath } from "next/cache";
 
 const DEMO_AUTHOR_EMAIL = "rizki@email.com"
@@ -21,19 +22,31 @@ async function getOrCreateDemoAuthor() {
   });
 }
 
-export async function createPostAction(formData: FormData) {
-  const title = formData.get("title") as string;
-  const slug = formData.get("slug") as string;
-  const excerpt = formData.get("excerpt") as string;
-  const content = formData.get("content") as string;
+export type CreatePostActionState = {
+  errors?: Record<string, string[]> | undefined;
+  success?: boolean;
+}
 
-  if (!title || !slug || !excerpt) return;
+export async function createPostAction(
+  _prevState: CreatePostActionState,
+  formData: FormData
+): Promise<CreatePostActionState> {
+  const result = createPostSchema.safeParse({
+    title: formData.get("title"),
+    slug: formData.get("slug"),
+    excerpt: formData.get("excerpt"),
+    content: formData.get("content") || undefined,
+  })
+
+  if (!result.success) {
+    return { errors: result.error.flatten().fieldErrors };
+  }
 
   const author = await getOrCreateDemoAuthor();
-  await createPost({
-    title, slug, excerpt, content: content || undefined, authorId: author.id
-  })
+
+  await createPost({ ...result.data, authorId: author.id });
   revalidatePath("/posts");
+  return { success: true };
 }
 
 export async function publishPostAction(id: string) {
