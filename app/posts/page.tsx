@@ -18,6 +18,9 @@ export default function PostsPage({
       <div>
         <h1>DEMO CRUD - POST</h1>
         <p>Halaman ini contoh nyata dari createPost, updatePost, softDelete</p>
+        <p className="text-sm">
+          Coba juga versi <Link href="/posts/new" className="underline">react-hook-form + Zod (Bab 4)</Link> — validasi real-time saat mengetik.
+        </p>
       </div>
 
       <CreatePostForm/>

@@ -6,6 +6,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { UserProvider } from "./context/UserContext";
 import { UserStoreProvider } from "./provider/user-store-provider";
 import { getCurrentMember } from "@/lib/data/member";
+import { Toaster } from "@/components/ui/sonner";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
 
@@ -38,6 +39,7 @@ export default async function RootLayout({
                 <footer style={{textAlign: 'center'}}>
                   &copy; 2026 EasyCoding Next.JS
                 </footer>
+                <Toaster />
               </UserStoreProvider>
             </UserProvider>
         </ThemeProvider>
