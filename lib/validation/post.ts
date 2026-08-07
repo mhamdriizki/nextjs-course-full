@@ -58,3 +58,13 @@ export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
 export type PostPreview = z.infer<typeof postPreviewSchema>;
 export type PostWithAuthor = z.infer<typeof postWithAuthorSchema>;
+
+// Query params dari URL SELALU string (atau undefined) — z.coerce ubah dulu
+// ke number sebelum divalidasi, baru divalidasi sebagai number beneran.
+export const postsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+  q: z.string().trim().optional(),
+});
+
+export type PostsQuery = z.infer<typeof postsQuerySchema>;
