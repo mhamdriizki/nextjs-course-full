@@ -1,34 +1,13 @@
 "use server";
 
 import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
+import { getOrCreateDemoAuthor } from "@/lib/data/user";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
-import { db } from "@/lib/db";
 import { ActionResult } from "@/lib/validation/action-result";
 import { createPostSchema } from "@/lib/validation/post";
 import { revalidatePath } from "next/cache";
 
 import { flattenError } from "zod";
-
-const DEMO_AUTHOR_EMAIL = "rizki@email.com"
-
-async function getOrCreateDemoAuthor() {
-  const existing = await db.user.findFirst({
-    where: { email: DEMO_AUTHOR_EMAIL }
-  });
-  if (existing) return existing;
-  return db.user.create({
-    data: {
-      email: DEMO_AUTHOR_EMAIL,
-      name: "Rizki",
-      role: "AUTHOR"
-    }
-  });
-}
-
-// export type CreatePostActionState = {
-//   errors?: Record<string, string[]> | undefined;
-//   success?: boolean;
-// }
 
 type CreatedPost = Awaited<ReturnType<typeof createPost>>;
 

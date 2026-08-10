@@ -58,3 +58,11 @@ export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
 export type PostPreview = z.infer<typeof postPreviewSchema>;
 export type PostWithAuthor = z.infer<typeof postWithAuthorSchema>;
+
+export const postsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+  q: z.string().trim().optional()
+});
+
+export type PostQuery = z.infer<typeof postsQuerySchema>;
