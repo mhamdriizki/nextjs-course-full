@@ -16,6 +16,7 @@ export default function PostsPage({
   return (
     <div className="max-w-2xl mx-auto p-8 space-y-8">
       <div>
+        <h2>Coba versi <Link href={"/posts/new"} className="underline">react-hook-form</Link></h2>
         <h1>DEMO CRUD - POST</h1>
         <p>Halaman ini contoh nyata dari createPost, updatePost, softDelete</p>
       </div>

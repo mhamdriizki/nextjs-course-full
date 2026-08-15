@@ -4,7 +4,7 @@ import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
 import { getOrCreateDemoAuthor } from "@/lib/data/user";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { ActionResult } from "@/lib/validation/action-result";
-import { createPostSchema } from "@/lib/validation/post";
+import { createPostSchema, type CreatePostInput } from "@/lib/validation/post";
 import { revalidatePath } from "next/cache";
 
 import { flattenError } from "zod";
@@ -46,4 +46,19 @@ export async function softDeletePostAction(id: string) {
 export async function saveThemePreferenceAction(userId: string, theme: string) {
   await upsertUserPreferences(userId, { theme });
   revalidatePath("/posts");
+}
+
+export async function createPostFromObjectAction(
+  data: CreatePostInput
+): Promise<ActionResult<CreatedPost>> {
+  const result = createPostSchema.safeParse(data);
+
+  if (!result.success) {
+    return { success: false, errors: flattenError(result.error).fieldErrors };
+  }
+
+  const author = await getOrCreateDemoAuthor();
+  const post = await createPost({ ...result.data, authorId: author.id });
+  revalidatePath("/posts");
+  return { success: true, data: post };
 }
