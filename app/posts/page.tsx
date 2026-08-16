@@ -10,6 +10,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { CreatePostForm } from "./CreatePostForm";
 import { DeleteButton } from "../components/DeleteButton";
+import { PublishToggle } from "../components/PublishToggle";
 
 const CATEGORIES = ["Technology", "Lifestyle", "Travel", "Food", "Education"];
 
@@ -97,11 +98,7 @@ async function PostList() {
                 </p>
               </div>
               <div className="flex gap-2 text-sm">
-                {!post.published && (
-                  <form action={publishPostAction.bind(null, post.id)}>
-                    <button className="underline">Publish</button>
-                  </form>
-                )}
+                {!post.published && <PublishToggle postId={post.id}/>}
                 <DeleteButton postId={post.id} />
               </div>
             </li>

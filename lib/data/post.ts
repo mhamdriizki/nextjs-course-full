@@ -1,3 +1,4 @@
+import { cacheTag } from "next/cache";
 import { db } from "../db";
 
 export async function createPost(data: {
@@ -21,6 +22,9 @@ export async function getPostBySlug(slug: string) {
 }
 
 export async function listPublishPosts() {
+  "use cache"
+  cacheTag("posts")
+
   return db.post.findMany({
     where: { published: true, deletedAt: null },
     orderBy: { createdAt: "desc" },
@@ -77,6 +81,9 @@ export async function getPosts({
   category?: string;
   page?: number;
 }) {
+  "use cache"
+  cacheTag("posts")
+  
   const where = {
     published: true,
     deletedAt: null,
