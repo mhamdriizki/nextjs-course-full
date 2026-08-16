@@ -1,12 +1,23 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { createPostAction } from "./action";
+import { toast } from "sonner";
 
 export function CreatePostForm() {
   const [state, formAction, isPending] = useActionState(createPostAction, null);
 
   const errors = state && !state.success ? state.errors : undefined;
+
+  useEffect(() => {
+    if (state) {
+      if (state.success) {
+        toast.success("Post berhasil dibuat!");
+      } else if (state.message) {
+        toast.error(state.message);
+      }
+    }
+  }, [state]);
 
   return (
     <form action={formAction} className="space-y-2 border rounded-lg p-4">
@@ -65,7 +76,8 @@ export function CreatePostForm() {
         {isPending ? "Menyimpan..." : "Simpan Post"}
       </button>
 
-      {state?.success && <p className="text-green-500 text-sm">Post berhasil dibuat</p>}
+      {/* state.success message digantikan dengan toast, tapi bisa dipertahankan sebagai opsi */}
+      {state?.success && <p className="text-green-500 text-sm">Post berhasil dibuat!</p>}
     </form>
   )
 }

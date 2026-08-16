@@ -5,6 +5,7 @@ import { getPosts, listPublishPosts } from "@/lib/data/post";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { CreatePostForm } from "./CreatePostForm";
+import { DeleteButton } from "@/components/DeleteButton";
 
 const CATEGORIES = ["Technology", "Lifestyle", "Travel", "Food", "Education"];
 
@@ -76,9 +77,7 @@ async function PostList() {
                     <button className="underline">Publish</button>
                   </form>
                 )}
-                <form action={softDeletePostAction.bind(null, post.id)}>
-                  <button className="text-red-500 underline">Hapus</button>
-                </form>
+                <DeleteButton postId={post.id} />
               </div>
             </li>
           ))}

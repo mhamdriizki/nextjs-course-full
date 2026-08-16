@@ -26,11 +26,14 @@ export async function createPostAction(
     return { success: false, errors: flattenError(result.error).fieldErrors}
   }
 
-  const author = await getOrCreateDemoAuthor();
-
-  const post = await createPost({ ...result.data, authorId: author.id })
-  revalidatePath("/posts");
-  return { success: true, data: post };
+  try {
+    const author = await getOrCreateDemoAuthor();
+    const post = await createPost({ ...result.data, authorId: author.id });
+    revalidatePath("/posts");
+    return { success: true, data: post };
+  } catch (error) {
+    return { success: false, message: "Gagal menyimpan post ke database." };
+  }
 }
 
 export async function publishPostAction(id: string) {
@@ -38,9 +41,14 @@ export async function publishPostAction(id: string) {
   revalidatePath("/posts");
 }
 
-export async function softDeletePostAction(id: string) {
-  await softDeletePost(id);
-  revalidatePath("/posts");
+export async function softDeletePostAction(id: string): Promise<ActionResult<null>> {
+  try {
+    await softDeletePost(id);
+    revalidatePath("/posts");
+    return { success: true, data: null };
+  } catch (error) {
+    return { success: false, message: "Gagal menghapus post" };
+  }
 }
 
 export async function saveThemePreferenceAction(userId: string, theme: string) {
@@ -57,8 +65,12 @@ export async function createPostFromObjectAction(
     return { success: false, errors: flattenError(result.error).fieldErrors };
   }
 
-  const author = await getOrCreateDemoAuthor();
-  const post = await createPost({ ...result.data, authorId: author.id });
-  revalidatePath("/posts");
-  return { success: true, data: post };
+  try {
+    const author = await getOrCreateDemoAuthor();
+    const post = await createPost({ ...result.data, authorId: author.id });
+    revalidatePath("/posts");
+    return { success: true, data: post };
+  } catch (error) {
+    return { success: false, message: "Gagal menyimpan post ke database." };
+  }
 }
