@@ -5,7 +5,7 @@ import { getOrCreateDemoAuthor } from "@/lib/data/user";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { ActionResult } from "@/lib/validation/action-result";
 import { createPostSchema, type CreatePostInput } from "@/lib/validation/post";
-import { revalidatePath } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 import { flattenError } from "zod";
 
@@ -29,7 +29,7 @@ export async function createPostAction(
   try {
     const author = await getOrCreateDemoAuthor();
     const post = await createPost({ ...result.data, authorId: author.id });
-    revalidatePath("/posts");
+    revalidateTag("posts", "max");
     return { success: true, data: post };
   } catch (error) {
     return { success: false, message: "Gagal menyimpan post ke database." };
@@ -38,13 +38,13 @@ export async function createPostAction(
 
 export async function publishPostAction(id: string) {
   await updatePost(id, { published: true });
-  revalidatePath("/posts");
 }
 
 export async function softDeletePostAction(id: string): Promise<ActionResult<null>> {
   try {
     await softDeletePost(id);
-    revalidatePath("/posts");
+    revalidateTag("posts", "max");
+    revalidateTag(`post-${id}`, "max");
     return { success: true, data: null };
   } catch (error) {
     return { success: false, message: "Gagal menghapus post" };
@@ -68,7 +68,7 @@ export async function createPostFromObjectAction(
   try {
     const author = await getOrCreateDemoAuthor();
     const post = await createPost({ ...result.data, authorId: author.id });
-    revalidatePath("/posts");
+    revalidateTag("posts", "max");
     return { success: true, data: post };
   } catch (error) {
     return { success: false, message: "Gagal menyimpan post ke database." };
