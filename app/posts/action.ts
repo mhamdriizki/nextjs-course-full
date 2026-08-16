@@ -7,7 +7,7 @@ import { ActionResult } from "@/lib/validation/action-result";
 import { createPostSchema, type CreatePostInput } from "@/lib/validation/post";
 import { revalidatePath } from "next/cache";
 
-import { flattenError } from "zod";
+import { flattenError, success } from "zod";
 
 type CreatedPost = Awaited<ReturnType<typeof createPost>>;
 
@@ -26,11 +26,14 @@ export async function createPostAction(
     return { success: false, errors: flattenError(result.error).fieldErrors}
   }
 
-  const author = await getOrCreateDemoAuthor();
-
-  const post = await createPost({ ...result.data, authorId: author.id })
-  revalidatePath("/posts");
-  return { success: true, data: post };
+  try {
+    const author = await getOrCreateDemoAuthor();
+    const post = await createPost({ ...result.data, authorId: author.id })
+    revalidatePath("/posts");
+    return { success: true, data: post }; 
+  } catch (error) {
+    return { success: false, message: "Gagal menyimpan post ke database"}
+  }
 }
 
 export async function publishPostAction(id: string) {
@@ -39,8 +42,13 @@ export async function publishPostAction(id: string) {
 }
 
 export async function softDeletePostAction(id: string) {
-  await softDeletePost(id);
-  revalidatePath("/posts");
+  try {
+    await softDeletePost(id);
+    revalidatePath("/posts");
+    return {success: true, data: null}
+  } catch (error) {
+    return {success: false, message: "Gagal menghapus post"};
+  }
 }
 
 export async function saveThemePreferenceAction(userId: string, theme: string) {
@@ -57,8 +65,12 @@ export async function createPostFromObjectAction(
     return { success: false, errors: flattenError(result.error).fieldErrors };
   }
 
-  const author = await getOrCreateDemoAuthor();
-  const post = await createPost({ ...result.data, authorId: author.id });
-  revalidatePath("/posts");
-  return { success: true, data: post };
+  try {
+    const author = await getOrCreateDemoAuthor();
+    const post = await createPost({ ...result.data, authorId: author.id });
+    revalidatePath("/posts");
+    return { success: true, data: post };
+  } catch (error) {
+    return { success: false, message: "Gagal menyimpan post ke database"};
+  }
 }
