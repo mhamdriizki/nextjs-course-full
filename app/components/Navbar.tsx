@@ -1,74 +1,39 @@
-"use client"
-
-import Link from "next/link";
-import { usePathname } from "next/navigation"
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { ThemeToggle } from "./ThemeToggle";
-import { UserBadge } from "./UserBadge";
 import { CartBadge } from "./CartBadge";
+import { NavLinks } from "./NavLinks";
+import { LogoutButton } from "@/components/LogoutButton";
+import Link from "next/link";
 
-export default function Navbar() {
-  const pathName = usePathname();
+export default async function Navbar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
-    <nav style={{ background:"#1f2937", padding:"1rem", display:"flex", gap:"1rem" }}>
-      {/* Kita selalu pakai Link untuk pindah halaman */}
-      <Link
-        href="/"
-        style={{
-          color: pathName === "/" ? "#34d399" : "white",
-          fontWeight: pathName === "/" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Home
-      </Link>
+    <nav style={{ background: "#1f2937", padding: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
+      <NavLinks />
 
-      <Link
-        href="/blog"
-        style={{
-          color: pathName === "/blog" ? "#34d399" : "white",
-          fontWeight: pathName === "/blog" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Blog
-      </Link>
+      <ThemeToggle />
 
-      <Link
-        href="/dashboard"
-        style={{
-          color: pathName === "/dashboard" ? "#34d399" : "white",
-          fontWeight: pathName === "/dashboard" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Dashboard
-      </Link>
-
-      <Link
-        href="/member"
-        style={{
-          color: pathName === "/member" ? "#34d399" : "white",
-          fontWeight: pathName === "/member" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Member
-      </Link>
-
-      <Link
-        href="/gym"
-        style={{
-          color: pathName === "/member" ? "#34d399" : "white",
-          fontWeight: pathName === "/member" ? "bold" : "normal",
-          textDecoration: "none"
-        }}>
-          Gym Classes
-      </Link>
-
-      <ThemeToggle/>
-
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <CartBadge/>
-        <UserBadge/>
+      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "1rem" }}>
+        <CartBadge />
+        
+        {/* Session Management Area */}
+        {session ? (
+          <div className="flex items-center gap-3 text-white text-sm">
+            <span>Halo, <strong>{session.user.name || session.user.email}</strong></span>
+            <LogoutButton />
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="text-white hover:text-emerald-400 text-sm font-medium">Masuk</Link>
+            <span className="text-slate-500">|</span>
+            <Link href="/register" className="text-white hover:text-emerald-400 text-sm font-medium">Daftar</Link>
+          </div>
+        )}
       </div>
-
     </nav>
-  )
+  );
 }
