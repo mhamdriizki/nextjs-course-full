@@ -17,6 +17,8 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
+  emailVerified Boolean @default(false)
+  image         String?
   role      UserRole @default(READER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,6 +30,40 @@ model User {
   notifications Notification[]
   following Follow[] @relation("Follower")
   followers Follow[] @relation("Following")
+  
+  sessions Session[]
+  accounts Account[]
+}
+
+model Session {
+  id String @id @default(cuid())
+  expiresAt DateTime
+  token String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("session")
+}
+
+model Account {
+  id String @id @default(cuid())
+  accountId String
+  providerId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  expiresAt DateTime?
+  password String?
+  @@map("account")
+}
+
+model Verification {
+  id String @id @default(cuid())
+  identifier String
+  value String
+  expiresAt DateTime
+  @@map("verification")
 }
 
 model Follow {

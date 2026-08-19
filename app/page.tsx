@@ -7,10 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import RequestModulDialog from "./components/RequestModulDialog";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useSession } from "@/lib/auth-client";
 
 export default function HomePage() {
+  const { data: session, isPending } = useSession();
   return (
     <main className="min-h-screen p-8 lg:p-24 bg-gray-50 dark:bg-slate-950">
+      <div className="mb-4 flex items-center gap-4">
+        {isPending ? (
+          <Badge variant="outline">Memuat sesi...</Badge>
+        ) : session ? (
+          <Badge variant="default" className="bg-green-600">Login sebagai: {session.user.name || session.user.email}</Badge>
+        ) : (
+          <Badge variant="secondary">Belum login</Badge>
+        )}
+      </div>
       <h1 className="text-4xl font-extrabold tracking-tight mb-8 text-slate-900 dark:text-white">
         Next.js Masterclass
       </h1>
