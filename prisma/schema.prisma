@@ -13,6 +13,7 @@ datasource db {
 }
 
 // Hanya membuat model model
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -21,43 +22,50 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts    Post[]
-  comments Comment[]
+  posts       Post[]
+  comments    Comment[]
   preferences UserPreferences?
 
   notifications Notification[]
-  following Follow[] @relation("Follower")
-  followers Follow[] @relation("Following")
+  following     Follow[]       @relation("Follower")
+  followers     Follow[]       @relation("Following")
+  emailVerified Boolean        @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
 }
 
 model Follow {
-  id String @id @default(cuid())
-  followerId String
-  follower User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
   followingId String
-  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
   @@unique([followerId, followingId])
 }
 
 model Notification {
-  id String @id @default(cuid())
-  message String
-  read Boolean @default(false)
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId String?
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  message   String
+  read      Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
 model UserPreferences {
-  id String @id @default(cuid())
-  userId String @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme String @default("system")
-  emailNotified Boolean @default(true)
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme         String   @default("system")
+  emailNotified Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
 }
 
 enum UserRole {
@@ -79,11 +87,11 @@ model Post {
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  comments Comment[]
+  comments      Comment[]
   notifications Notification[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 }
 
@@ -98,4 +106,52 @@ model Comment {
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
