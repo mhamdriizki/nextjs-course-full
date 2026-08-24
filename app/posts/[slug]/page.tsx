@@ -8,16 +8,15 @@ export default async function PostDetailPage({
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const {slug} = await params;
-
   return (
     <Suspense fallback={<p>Loading . . .</p>}>
-      <PostDetailContent slug={slug}/>
+      <PostDetailContent params={params}/>
     </Suspense>
   )
 }
 
-async function PostDetailContent({ slug }: { slug: string }) {
+async function PostDetailContent({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   await connection();
 
   const post = await getPostBySlug(slug);

@@ -33,14 +33,20 @@ model User {
   
   sessions Session[]
   accounts Account[]
+
+  @@map("user")
 }
 
 model Session {
   id String @id @default(cuid())
   expiresAt DateTime
   token String @unique
+  ipAddress String?
+  userAgent String?
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("session")
 }
 
@@ -48,13 +54,18 @@ model Account {
   id String @id @default(cuid())
   accountId String
   providerId String
+  issuer String
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken String?
   refreshToken String?
   idToken String?
-  expiresAt DateTime?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
   password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("account")
 }
 
@@ -63,6 +74,8 @@ model Verification {
   identifier String
   value String
   expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("verification")
 }
 

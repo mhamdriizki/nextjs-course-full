@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navbar from "./components/Navbar"
 import './globals.css';
 import { Figtree } from "next/font/google";
@@ -30,7 +31,9 @@ export default async function RootLayout({
           disableTransitionOnChange>
             <UserProvider>
               <UserStoreProvider initialMember={initialMember}>
-                <Navbar/>
+                <Suspense fallback={<nav style={{ background: "#1f2937", height: "72px" }} />}>
+                  <Navbar/>
+                </Suspense>
 
                 <main style={{ padding: '2rem', minHeight: '80vh'}}>
                   {children}

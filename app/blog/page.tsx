@@ -12,15 +12,14 @@ export default async function BlogPage({
 }: {
   searchParams: Promise<{ filter?: string}>
 }) {
-  // Panggil db
-  const userCount = await db.user.count();
-
   // Panggil data post
   const posts = await getPosts();
 
   return (
     <div className="max-w-5xl mx-auto p-8">
-      <h1>Total user dalam database : {userCount}</h1>
+      <Suspense fallback={<p>Menghitung total user...</p>}>
+        <UserCount />
+      </Suspense>
       <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
         Artikel Blog
       </h1>
@@ -98,4 +97,9 @@ async function FilteredPostList({
   const filteredPost = filter === "published" ? post.filter((p) => p.published) : post;
 
   return <PostList post={filteredPost} activeFilter={filter}/>
+}
+
+async function UserCount() {
+  const count = await db.user.count();
+  return <h1>Total user dalam database : {count}</h1>;
 }
