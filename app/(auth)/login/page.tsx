@@ -9,10 +9,10 @@ import { GoogleIcon, Loading03Icon, LockPasswordIcon, Mail01Icon, ViewIcon, View
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -165,5 +165,13 @@ export default function LoginPage() {
         </p>
       </CardFooter>
     </Card>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm/>
+    </Suspense>
   )
 }

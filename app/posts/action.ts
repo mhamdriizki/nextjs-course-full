@@ -1,11 +1,13 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { createPost, softDeletePost, updatePost } from "@/lib/data/post";
 import { getOrCreateDemoAuthor } from "@/lib/data/user";
 import { upsertUserPreferences } from "@/lib/data/user-preferences";
 import { ActionResult } from "@/lib/validation/action-result";
 import { createPostSchema, type CreatePostInput } from "@/lib/validation/post";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { headers } from "next/headers";
 
 import { flattenError, success } from "zod";
 
@@ -41,8 +43,16 @@ export async function publishPostAction(id: string) {
 }
 
 export async function softDeletePostAction(id: string) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  if (!session) {
+    return { success: false, message: 'Unauthorized' }
+  }
+
   try {
-    await softDeletePost(id);
+    await softDeletePost(id, session.user.id);
     revalidateTag("posts", "max");
     revalidateTag(`post-${id}`, "max");
     return { success: true, data: null };

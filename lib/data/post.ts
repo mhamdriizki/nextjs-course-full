@@ -61,9 +61,9 @@ export async function incrementPostViewCount(id: string) {
   });
 }
 
-export async function softDeletePost(id: string) {
+export async function softDeletePost(id: string, authorId: string) {
   return db.post.update({
-    where: { id },
+    where: { id, authorId },
     data: { deletedAt: new Date() }
   });
 }
