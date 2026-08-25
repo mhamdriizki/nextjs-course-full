@@ -6,21 +6,23 @@ import { LiveViewers } from "./components/LiveViewer";
 import { PopularPosts } from "./components/PopularPosts";
 import { AddPostForm } from "./components/AddPostForm";
 import { db } from "@/lib/db";
+import { connection } from "next/server";
 
 export default async function BlogPage({
   searchParams
 }: {
   searchParams: Promise<{ filter?: string}>
 }) {
-  // Panggil db
-  const userCount = await db.user.count();
-
   // Panggil data post
   const posts = await getPosts();
 
   return (
     <div className="max-w-5xl mx-auto p-8">
-      <h1>Total user dalam database : {userCount}</h1>
+      {/* db.user.count() itu uncached data, harus di dalam <Suspense> */}
+      <Suspense fallback={<h1>Menghitung total user . . .</h1>}>
+        <UserCount/>
+      </Suspense>
+
       <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
         Artikel Blog
       </h1>
@@ -74,6 +76,17 @@ export default async function BlogPage({
       </div>
     </div>
   )
+}
+
+async function UserCount() {
+  // Tandai eksplisit sebagai request-time data, biar db.user.count()
+  // (yang manggil new Date() secara internal buat query log) gak
+  // ke-flag oleh Cache Components sebelum ada sumber dinamis lain.
+  await connection();
+
+  const userCount = await db.user.count();
+
+  return <h1>Total user dalam database : {userCount}</h1>;
 }
 
 async function TrendingTags() {

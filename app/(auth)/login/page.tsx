@@ -8,12 +8,14 @@ import { signIn } from "@/lib/auth-client";
 import { GoogleIcon, Loading03Icon, LockPasswordIcon, Mail01Icon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +31,7 @@ export default function LoginPage() {
     const { error } = await signIn.email({
       email,
       password,
-      callbackURL: "/dashboard"
+      callbackURL: callbackUrl
     });
 
     setLoading(false);
@@ -41,7 +43,7 @@ export default function LoginPage() {
     }
 
     toast.success("Login berhasil");
-    router.push("/dashboard");
+    router.push(callbackUrl);
     router.refresh(); // wajib, agar server component ikut terupdate
   }
 
@@ -49,7 +51,7 @@ export default function LoginPage() {
     setGoogleLoading(true);
     const { error } = await signIn.social({
       provider: "google",
-      callbackURL: "/dashboard"
+      callbackURL: callbackUrl
     });
 
     if (error) {
@@ -164,4 +166,12 @@ export default function LoginPage() {
       </CardFooter>
     </Card>
   )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
 }

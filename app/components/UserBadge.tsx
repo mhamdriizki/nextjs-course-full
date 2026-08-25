@@ -1,28 +1,41 @@
 "use client"
 
-import { useUser } from "../context/UserContext"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { signOut, useSession } from "@/lib/auth-client"
 
 export function UserBadge() {
-  const { member, login, logout } = useUser();
+  const router = useRouter();
+  const { data: session, isPending } = useSession();
 
-  if (!member) {
+  async function handleLogout() {
+    await signOut();
+    router.push("/login");
+    router.refresh(); // wajib, agar server component (Navbar, dashboard, dll) ikut terupdate
+  }
+
+  if (isPending) {
+    return null;
+  }
+
+  if (!session) {
     return (
-      <button
-        onClick={() => login({ name: "Rizki", tier: "Silver" })}
-        style={{ color: 'white', background: 'transparent', border: '1px solid white', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}>
+      <Link
+        href="/login"
+        style={{ color: 'white', background: 'transparent', border: '1px solid white', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', textDecoration: 'none' }}>
           Login
-      </button>
+      </Link>
     )
   }
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'white' }}>
       <span>
-        Halo, <strong>{member.name}</strong> | {member.tier}
+        Halo, <strong>{session.user.name || session.user.email}</strong>
       </span>
 
       <button
-        onClick={logout}
+        onClick={handleLogout}
         style={{ color: 'white', background: 'transparent', border: '1px solid white', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}>
           Logout
       </button>

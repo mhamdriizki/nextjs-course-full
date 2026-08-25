@@ -6,6 +6,7 @@
       "name": "nextjs-course-full",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
+        "@better-fetch/fetch": "^1.3.1",
         "@hookform/resolvers": "^5.8.0",
         "@hugeicons/core-free-icons": "^4.2.2",
         "@hugeicons/react": "^1.1.9",
