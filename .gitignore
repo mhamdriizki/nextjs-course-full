@@ -44,3 +44,7 @@ next-env.d.ts
 .agents/
 .claude/
 .windsurf/
+
+# uploads (dev only, tidak persistent di Vercel)
+/public/uploads/*
+!/public/uploads/.gitkeep
