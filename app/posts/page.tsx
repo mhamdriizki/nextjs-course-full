@@ -7,6 +7,8 @@ import {
 import { connection } from "next/server";
 import { getPosts, listPublishPosts } from "@/lib/data/post";
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { CreatePostForm } from "./CreatePostForm";
 import { DeleteButton } from "../components/DeleteButton";
@@ -61,6 +63,7 @@ export default function PostsPage({
 async function PostList() {
   await connection();
 
+  const session = await auth.api.getSession({ headers: await headers() });
   const post = await listPublishPosts();
 
   const allPosts = await db.post.findMany({
@@ -72,37 +75,46 @@ async function PostList() {
       slug: true,
       published: true,
       viewCount: true,
+      authorId: true,
     },
   });
+
+  const isAdmin = session?.user.role === "ADMIN";
 
   return (
     <>
       <div>
         <h2>Semua post yang belum dibuat soft-delete</h2>
         <ul className="space-y-2">
-          {allPosts.map((post) => (
-            <li
-              key={post.id}
-              className="border rounded p-3 flex items-center justify-between gap-w"
-            >
-              <div>
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="font-medium underline"
-                >
-                  {post.title}
-                </Link>
-                <p className="text-xs text-slate-500">
-                  {post.published ? "Published" : "Draft"} - {post.viewCount}{" "}
-                  views
-                </p>
-              </div>
-              <div className="flex gap-2 text-sm">
-                {!post.published && <PublishToggle postId={post.id}/>}
-                <DeleteButton postId={post.id} />
-              </div>
-            </li>
-          ))}
+          {allPosts.map((post) => {
+            const isAuthor = session?.user.id === post.authorId;
+            const canManage = isAdmin || isAuthor;
+
+            return (
+              <li
+                key={post.id}
+                className="border rounded p-3 flex items-center justify-between gap-w"
+              >
+                <div>
+                  <Link
+                    href={`/posts/${post.slug}`}
+                    className="font-medium underline"
+                  >
+                    {post.title}
+                  </Link>
+                  <p className="text-xs text-slate-500">
+                    {post.published ? "Published" : "Draft"} - {post.viewCount}{" "}
+                    views
+                  </p>
+                </div>
+                <div className="flex gap-2 text-sm">
+                  {/* Tombol publish & hapus hanya untuk author post ini + admin — ini cuma UX, enforcement asli ada di publishPostAction/softDeletePostAction */}
+                  {!post.published && canManage && <PublishToggle postId={post.id}/>}
+                  {canManage && <DeleteButton postId={post.id} />}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

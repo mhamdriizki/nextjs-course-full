@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useTransition } from "react";
 import { publishPostAction } from "../posts/action";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function PublishToggle({ postId }: { postId: string }) {
   const router = useRouter();
@@ -12,7 +13,12 @@ export function PublishToggle({ postId }: { postId: string }) {
   async function handleToggle() {
     startTransition(async () => {
       // 1. Eksekusi mutasi
-      await publishPostAction(postId);
+      const result = await publishPostAction(postId);
+
+      if (!result.success) {
+        toast.error(result.message || "Gagal publish post");
+        return;
+      }
 
       // 2. minta next.js untuk render ulang halaman
       router.refresh();

@@ -129,7 +129,9 @@ export default function RegisterPage() {
       <CardFooter className="flex flex-col text-center text-sm text-muted-foreground">
         <p>
           Sudah punya akun? {""}
-          <Link href="/login" className="font-medium text-primary hover:underline"/>
+          <Link href="/login" className="font-medium text-primary hover:underline">
+            Login di sini
+          </Link>
         </p>
       </CardFooter>
     </Card>

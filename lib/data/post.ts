@@ -17,7 +17,7 @@ export async function createPost(data: {
 export async function getPostBySlug(slug: string) {
   return db.post.findFirst({
     where: {slug, deletedAt: null},
-    include: {author: { select: {name: true, email: true}}}
+    include: {author: { select: {id: true, name: true, email: true}}}
   })
 }
 
@@ -46,10 +46,11 @@ export async function updatePost(
     excerpt: string;
     content: string;
     published: boolean
-  }>
+  }>,
+  authorId?: string
 ) {
   return db.post.update({
-    where: { id },
+    where: authorId ? { id, authorId } : { id },
     data
   });
 }
@@ -61,9 +62,9 @@ export async function incrementPostViewCount(id: string) {
   });
 }
 
-export async function softDeletePost(id: string, authorId: string) {
+export async function softDeletePost(id: string, authorId?: string) {
   return db.post.update({
-    where: { id, authorId },
+    where: authorId ? { id, authorId } : { id },
     data: { deletedAt: new Date() }
   });
 }
