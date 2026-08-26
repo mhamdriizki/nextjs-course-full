@@ -51,8 +51,12 @@ export async function softDeletePostAction(id: string) {
     return { success: false, message: 'Unauthorized' }
   }
 
+  const isAdmin = session.user.role === "ADMIN";
+
   try {
-    await softDeletePost(id, session.user.id);
+    // ADMIN : authorId di skip -> bisa hapus post siapapun
+    // Bukan admin : authorid tetap dipaksa == dirinya sendiri => cuma bisa hapus post sendiri
+    await softDeletePost(id, isAdmin ? undefined : session.user.id);
     revalidateTag("posts", "max");
     revalidateTag(`post-${id}`, "max");
     return { success: true, data: null };

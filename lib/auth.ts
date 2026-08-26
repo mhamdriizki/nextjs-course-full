@@ -18,6 +18,16 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }
+  },
+  // Tambah user untuk role ke session
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "READER",
+        input: false // user gabisa set role sendiri pas signup
+      }
+    }
   }
 });
 
