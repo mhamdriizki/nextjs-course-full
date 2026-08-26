@@ -391,6 +391,21 @@ lapisan luar — Route Handler pakai `NextRequest`/`NextResponse`, bukan
      -F "file=@public/next.svg"
    ```
 
+   Bisa juga pakai file dari luar folder proyek, misal gambar yang ada di
+   Finder/Downloads — tinggal ganti path setelah `@` jadi path absolut ke
+   file itu:
+
+   ```bash
+   curl -X POST http://localhost:3000/api/upload \
+     -F "file=@/Users/namakalian/Downloads/nama-file.png"
+   ```
+
+   > Kalau nama file-nya ada spasi (misal `Untitled design-13.png`), gak
+   > perlu tambahan tanda kutip lagi — semua yang setelah `@` sampai akhir
+   > tanda kutip penutup `"..."` udah dianggap satu path utuh sama shell.
+   > Field name-nya WAJIB `file` (bukan nama lain), karena itu yang dibaca
+   > `formData.get("file")` di Route Handler.
+
 **Test manual:**
 
 - `bun dev` harus jalan.
