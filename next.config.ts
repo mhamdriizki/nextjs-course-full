@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       revalidate: 900, // 15 menit
       expire: 86400 // 1 hari
     }
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com"
+      }
+    ]
   }
 };
 
