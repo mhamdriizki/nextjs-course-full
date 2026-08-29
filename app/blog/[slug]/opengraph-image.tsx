@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { cacheLife } from "next/cache";
 import { getPostBySlug } from "@/lib/data/post";
 
 // Node.js runtime (default) — bukan edge, karena Prisma client project ini
@@ -12,9 +11,6 @@ export default async function OgImage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  "use cache"
-  cacheLife("blog")
-
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
