@@ -19,7 +19,10 @@ async function SettingsGuard() {
 
       <div>
         <h3 className="font-medium mb-2">Avatar</h3>
-        <AvatarUploadForm currentAvatarUrl={session.user.image}/>
+        <AvatarUploadForm
+          currentAvatarUrl={session.user.image}
+          currentUserName={session.user.name}
+        />
       </div>
     </div>
   )

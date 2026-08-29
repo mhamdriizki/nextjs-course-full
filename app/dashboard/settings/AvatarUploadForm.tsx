@@ -3,11 +3,14 @@
 import { useActionState, useEffect, useState } from "react";
 import { updateAvatarAction } from "./avatar-action";
 import { toast } from "sonner";
+import { Avatar } from "@/app/components/Avatar";
 
 export function AvatarUploadForm({
   currentAvatarUrl,
+  currentUserName,
 }: {
   currentAvatarUrl?: string | null;
+  currentUserName?: string | null;
 }) {
   const [state, formAction, isPending] = useActionState(
     updateAvatarAction,
@@ -34,15 +37,21 @@ export function AvatarUploadForm({
   const fieldErrors = state && !state.success ? state.errors : undefined;
   const displayUrl =
     (state?.success ? state.data.url : null) ?? preview ?? currentAvatarUrl;
+  // blob: URL cuma ada di memori tab ini — next/image gak bisa fetch itu
+  // lewat optimizer server-side, jadi preview lokal tetap pakai <img> biasa.
+  const isLocalPreview = displayUrl?.startsWith("blob:") ?? false;
 
   return (
     <form action={formAction} className="space-y-3 border rounded-lg p-4">
-      {displayUrl && (
+      {isLocalPreview && displayUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element -- blob: URL, next/image gak bisa optimasi ini
         <img
           src={displayUrl}
-          alt="Avatar"
+          alt="Preview avatar baru"
           className="w-24 h-24 rounded-full object-cover"
         />
+      ) : (
+        <Avatar src={displayUrl} name={currentUserName} size={96} />
       )}
 
       <input
