@@ -31,6 +31,7 @@ export function AvatarUploadForm({
     }
   }
 
+  const fieldErrors = state && !state.success ? state.errors : undefined;
   const displayUrl =
     (state?.success ? state.data.url : null) ?? preview ?? currentAvatarUrl;
 
@@ -40,17 +41,21 @@ export function AvatarUploadForm({
         <img
           src={displayUrl}
           alt="Avatar"
-          className="w-24 h24 rounded-full object-cover-hover"
+          className="w-24 h-24 rounded-full object-cover"
         />
       )}
 
       <input
         type="file"
         name="avatar"
-        accept="image/&"
+        accept="image/*"
         onChange={handleFileChange}
         className="block"
       />
+
+      {fieldErrors?.avatar?.[0] && (
+        <p className="text-sm text-red-600">{fieldErrors.avatar[0]}</p>
+      )}
 
       <button
         type="submit"
