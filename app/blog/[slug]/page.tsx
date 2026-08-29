@@ -2,10 +2,45 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import CommentSection from "./components/CommentsSection";
 import { getPublishedPosts } from "@/lib/data/blog";
+import { Metadata } from "next";
+import { cacheLife } from "next/cache";
+import { getPostBySlug } from "@/lib/data/post";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   const post = await getPublishedPosts();
   return post.map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  "use cache"
+  cacheLife("blog");
+
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) {
+    return {
+      title: "Artikel tidak ditemukan"
+    }
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${slug}`
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article"
+    }
+  }
 }
 
 export default async function BlogPostPage({ 
@@ -26,15 +61,21 @@ async function BlogPostContent({
 }: {
   params: Promise<{slug: string}>
 }) {
+  "use cache"
+  cacheLife("blog")
+
   const {slug} = await params;
+  const post = await getPostBySlug(slug);
+
+  if (!post) notFound();
 
   return (
     <article className="max-w-3xl mx-auto p-8">
       {/* Render utama, yang enteng */}
       <div className="mb-12">
         <p className="text-blue-500 font-semibold mb-2">Artikel Blog /{slug}</p>
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-4">Streaming di Next.JS</h1>
-        <p className="text-lg text-slate-700 leading-relaxed">Ini adalah artikel yang tidak perlu dirender lama, enteng sekali</p>
+        <h1 className="text-4xl font-extrabold text-slate-900 mb-4">{post.title}</h1>
+        <p className="text-lg text-slate-700 leading-relaxed">{post.excerpt}</p>
       </div>
       {/* Bagian yang akan dirender lama (KOMENTAR) */}
       <hr />
@@ -53,7 +94,7 @@ async function BlogPostContent({
                 <div className="h-20 bg-slate-200 rounded w-full"></div>
               </div>
             }>
-              <CommentSection slug="{slug}"/>
+              <CommentSection slug={slug}/>
           </Suspense>
       </ErrorBoundary>
     </article>

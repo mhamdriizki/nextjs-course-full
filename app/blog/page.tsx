@@ -7,6 +7,12 @@ import { PopularPosts } from "./components/PopularPosts";
 import { AddPostForm } from "./components/AddPostForm";
 import { db } from "@/lib/db";
 import { connection } from "next/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Kumpulan artikel dan tutorial dari Easycoding"
+}
 
 export default async function BlogPage({
   searchParams

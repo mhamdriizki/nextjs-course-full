@@ -1,5 +1,6 @@
 import { cacheTag } from "next/cache";
 import { db } from "../db";
+import { cache } from "react";
 
 export async function createPost(data: {
   title: string;
@@ -14,12 +15,12 @@ export async function createPost(data: {
   });
 }
 
-export async function getPostBySlug(slug: string) {
+export const getPostBySlug = cache(async (slug: string) => {
   return db.post.findFirst({
     where: {slug, deletedAt: null},
     include: {author: { select: {name: true, email: true}}}
   })
-}
+})
 
 export async function listPublishPosts() {
   "use cache"
