@@ -40,6 +40,7 @@ export async function createPostAction(
 
 export async function publishPostAction(id: string) {
   await updatePost(id, { published: true });
+  revalidatePath("/sitemap.xml");
 }
 
 export async function softDeletePostAction(id: string) {
