@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useUser } from "../context/UserContext"
 import { signOut, useSession } from "@/lib/auth-client";
 import Link from "next/link";
+import { Avatar } from "./Avatar";
 
 export function UserBadge() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export function UserBadge() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'white'}}>
+      <Avatar src={session.user.image} name={session.user.name} size={32} preload/>
       <span>
         Halo, <strong>{session.user.name || session.user.email}</strong>
       </span>

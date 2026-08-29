@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { uploadLocalAction } from "./action";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export function UploadForm() {
   const [state, formAction, isPending] = useActionState(
@@ -30,10 +31,13 @@ export function UploadForm() {
         {isPending ? "Mengupload ..." : "Upload"}
       </button>
 
+      {/* Pola Image 1: Fixed */}
       {state?.success && (
-        <img
-          src={state.data.url}
+        <Image
+          src={`/${state.data.url}`}
           alt="Preview hasil upload"
+          width={300}
+          height={300}
           className="mt-2 max-w-xs rounded border"
         />
       )}

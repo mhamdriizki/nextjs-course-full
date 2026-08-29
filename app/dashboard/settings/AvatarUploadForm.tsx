@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { updateAvatarAction } from "./avatar-action";
 import { toast } from "sonner";
 import { MAX_IMG } from "@/lib/validation/file";
+import { Avatar } from "@/app/components/Avatar";
 
 export function AvatarUploadForm({
   currentAvatarUrl,
@@ -45,16 +46,21 @@ export function AvatarUploadForm({
   const fieldErrors = state && !state.success ? state.errors : undefined;
   const displayUrl =
     (state?.success ? state.data.url : null) ?? preview ?? currentAvatarUrl;
+  const isLocalPreview = displayUrl?.startsWith("blob:") ?? false;
 
   return (
     <form action={formAction} className="space-y-3 border rounded-lg p-4">
-      {displayUrl && (
-        <img
-          src={displayUrl}
-          alt="Avatar"
-          className="w-24 h24 rounded-full object-cover-hover"
-        />
-      )}
+      {isLocalPreview && displayUrl ? (
+          <img
+            src={displayUrl}
+            alt="Avatar"
+            className="w-24 h24 rounded-full object-cover-hover"
+          />
+        ) : 
+        (
+          <Avatar src={displayUrl} size={96}/>
+        )
+      }
 
       <input
         type="file"
