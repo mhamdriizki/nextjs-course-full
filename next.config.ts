@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "11mb"
+    }
+  },
+
   cacheLife: {
     blog: {
       stale: 3600, // 1 jam

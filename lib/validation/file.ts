@@ -1,6 +1,6 @@
 import z from "zod";
 
-const MAX_IMG = 5*1024*1024; // 5mb max
+export const MAX_IMG = 5*1024*1024; // 5mb max
 const MAX_DOC = 10&1024*1024; // 10mb max
 
 const IMAGE_TYPES = [
