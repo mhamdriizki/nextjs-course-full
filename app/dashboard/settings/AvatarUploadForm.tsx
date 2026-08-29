@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { updateAvatarAction } from "./avatar-action";
 import { toast } from "sonner";
+import { MAX_IMG } from "@/lib/validation/file";
 
 export function AvatarUploadForm({
   currentAvatarUrl,
@@ -14,6 +15,7 @@ export function AvatarUploadForm({
     null,
   );
   const [preview, setPreview] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state?.success) {
@@ -25,6 +27,15 @@ export function AvatarUploadForm({
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+
+    if (file && file.size > MAX_IMG) {
+      setSizeError("Ukuran maksimal 5MB");
+      setPreview(null);
+      e.target.value = "";
+      return;
+    }
+
+    setSizeError(null);
 
     if (file) {
       setPreview(URL.createObjectURL(file));
@@ -53,13 +64,15 @@ export function AvatarUploadForm({
         className="block"
       />
 
-      {fieldErrors?.avatar?.[0] && (
+      {sizeError && <p className="text-sm text-red-600">{sizeError}</p>}
+
+      {!sizeError && fieldErrors?.avatar?.[0] && (
         <p className="text-sm text-red-600">{fieldErrors.avatar[0]}</p>
       )}
 
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || !!sizeError}
         className="bg-slate-900 text-white px-4 py-2 rounded disabled:opacity-50"
       >
         {isPending ? "Mengupload" : "Update Avatar"}
