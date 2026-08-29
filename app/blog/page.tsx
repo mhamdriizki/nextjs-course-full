@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getPosts, getPublishedPosts, getTrendingTags } from "@/lib/data/blog";
 import { PostList } from "./components/PostList"
 import { Suspense } from "react";
@@ -7,6 +8,11 @@ import { PopularPosts } from "./components/PopularPosts";
 import { AddPostForm } from "./components/AddPostForm";
 import { db } from "@/lib/db";
 import { connection } from "next/server";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Kumpulan artikel dan tutorial dari EasyCoding.",
+};
 
 export default async function BlogPage({
   searchParams

@@ -1,28 +1,32 @@
 import { auth } from "@/lib/auth";
-import { getPostBySlug, incrementPostViewCount } from "@/lib/data/post";
+import { getPostBySlug, getPosts, incrementPostViewCount } from "@/lib/data/post";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { DeletePostButton } from "./DeletePostButton";
 
+export async function generateStaticParams() {
+  const { posts } = await getPosts({});
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
 export default async function PostDetailPage({
   params
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const {slug} = await params;
-
   return (
     <Suspense fallback={<p>Loading . . .</p>}>
-      <PostDetailContent slug={slug}/>
+      <PostDetailContent params={params}/>
     </Suspense>
   )
 }
 
-async function PostDetailContent({ slug }: { slug: string }) {
+async function PostDetailContent({ params }: { params: Promise<{ slug: string }> }) {
   await connection();
 
+  const {slug} = await params;
   const post = await getPostBySlug(slug);
   const session = await auth.api.getSession({
     headers: await headers()

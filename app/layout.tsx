@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "./components/Navbar"
 import './globals.css';
 import { Figtree } from "next/font/google";
@@ -9,6 +10,27 @@ import { getCurrentMember } from "@/lib/data/member";
 import { Toaster } from "sonner";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
+  title: {
+    template: "%s | EasyCoding",
+    default: "EasyCoding — Belajar Next.js",
+  },
+  description: "Platform belajar Next.js dari basic sampai production-ready.",
+  openGraph: {
+    title: "EasyCoding",
+    description: "Platform belajar Next.js dari basic sampai production-ready.",
+    siteName: "EasyCoding",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EasyCoding",
+    description: "Platform belajar Next.js dari basic sampai production-ready.",
+  },
+};
 
 
 export default async function RootLayout({
