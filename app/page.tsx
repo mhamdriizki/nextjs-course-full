@@ -48,7 +48,7 @@ export default function HomePage() {
             <Badge variant="secondary">Dasar</Badge>
           </div>
 
-          <h2 className="text-xl font-bold mb-2 text-slate-800 dark:text-slate-100">
+          <h2 className="text-xl font-bold mb-2 text-slate-800 dark:text-slate-100" style={{ fontFamily: 'Fira Code, monospace' }}>
             Modul 1: Fondasi App Router
           </h2>
 

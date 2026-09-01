@@ -1,6 +1,6 @@
 import Navbar from "./components/Navbar"
 import './globals.css';
-import { Figtree } from "next/font/google";
+import { Figtree, Fira_Code } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { UserProvider } from "./context/UserContext";
@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 }
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
+const firaCode = Fira_Code({subsets:['latin'],variable:'--font-mono', weight:['400', '500']});
 
 
 export default async function RootLayout({
@@ -43,7 +44,7 @@ export default async function RootLayout({
   return (
     // Wajib tambahkan suppressHydrationWarning untuk mencegah React panik kalau tema server beda 
     // dengan tema browser user
-    <html lang="id" className={cn("font-sans", figtree.variable)} suppressHydrationWarning>
+    <html lang="id" className={cn("font-sans", figtree.variable, firaCode.variable)} suppressHydrationWarning>
       <body style={{ margin:0, padding:0, fontFamily: 'Arial, sans-serif' }}>
         <ThemeProvider
           attribute='class'
