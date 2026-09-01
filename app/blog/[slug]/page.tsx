@@ -69,8 +69,28 @@ async function BlogPostContent({
 
   if (!post) notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "author": {
+      "@type": "Person",
+      "name": post.author.name
+    },
+    "datePublished": post.createdAt,
+    "dateModified": post.updatedAt,
+  }
+
   return (
     <article className="max-w-3xl mx-auto p-8">
+      {/* JSON-LD untuk rich result Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ 
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c")
+        }}
+      />
       {/* Render utama, yang enteng */}
       <div className="mb-12">
         <p className="text-blue-500 font-semibold mb-2">Artikel Blog /{slug}</p>
