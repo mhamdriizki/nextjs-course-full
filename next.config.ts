@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
 
+  // react compiler
+  reactCompiler: true,
+
   experimental: {
     serverActions: {
       bodySizeLimit: "11mb"
