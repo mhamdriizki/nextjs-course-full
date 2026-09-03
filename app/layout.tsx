@@ -8,6 +8,7 @@ import { UserStoreProvider } from "./provider/user-store-provider";
 import { getCurrentMember } from "@/lib/data/member";
 import { Toaster } from "sonner";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
@@ -53,10 +54,14 @@ export default async function RootLayout({
           disableTransitionOnChange>
             <UserProvider>
               <UserStoreProvider initialMember={initialMember}>
-                <Navbar/>
+                <Suspense fallback={null}>
+                  <Navbar/>
+                </Suspense>
 
                 <main style={{ padding: '2rem', minHeight: '80vh'}}>
-                  {children}
+                  <Suspense fallback={<p>Loading ...</p>}>
+                    {children}
+                  </Suspense>
                 </main>
 
                 <footer style={{textAlign: 'center'}}>

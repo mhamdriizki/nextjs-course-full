@@ -5,14 +5,15 @@ export async function inspectFileAction(formData: FormData) {
 
   if (!(file instanceof File)) {
     console.log("Tidak ada file yang dikirim");
+    return;
   }
 
   console.log({
-    name: file?.name,
-    type: file?.type,
-    sizeInKb: (file?.size / 1024).toFixed(2)
+    name: file.name,
+    type: file.type,
+    sizeInKb: (file.size / 1024).toFixed(2)
   });
 
-  const buffer = Buffer.from(await file?.arrayBuffer());
+  const buffer = Buffer.from(await file.arrayBuffer());
   console.log("Binary length: ", buffer.length, "bytes");
 }
