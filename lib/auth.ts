@@ -2,11 +2,14 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
 import { nextCookies } from "better-auth/next-js";
+import { env } from "./env";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.BETTER_AUTH_URL,
   plugins: [nextCookies()],
   emailAndPassword: {
     enabled: true,
@@ -15,8 +18,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET
     }
   },
   // Tambah user untuk role ke session
