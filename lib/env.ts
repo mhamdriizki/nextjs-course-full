@@ -12,7 +12,7 @@ const serverEnvSchema = z.object({
 });
 
 const clientEnvSchema = z.object({
-  NEXT_PUBLIC_APP_URL: z.url("NEXT_PUBLIC_APP_URL wajib diisi"),
+  NEXT_APP_URL: z.url("NEXT_APP_URL wajib diisi"),
 });
 
 function parseServerEnv() {
@@ -26,7 +26,7 @@ function parseServerEnv() {
 
 function parseClientEnv() {
   const parsed = clientEnvSchema.safeParse({
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_APP_URL: process.env.NEXT_APP_URL,
   });
   if (!parsed.success) {
     console.error("❌ Invalid client environment variables:", parsed.error.format());

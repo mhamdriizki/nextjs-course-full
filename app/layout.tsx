@@ -11,7 +11,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
+  metadataBase: new URL(process.env.NEXT_APP_URL!),
   title: {
     template: "%s | Easycoding",
     default: "Easycoding - Belajar Next.js"
