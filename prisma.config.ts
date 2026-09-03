@@ -10,7 +10,11 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // Migrasi/schema-engine butuh koneksi langsung (non-pooled) ke DB.
+    // DIRECT_URL opsional: kalau kalian pakai pooler (Neon, Supabase, dst),
+    // isi DIRECT_URL dengan connection string non-pooled di .env.
+    // Tanpa pooler (kayak local dev kita), DIRECT_URL boleh kosong — fallback ke DATABASE_URL.
+    url: process.env.DIRECT_URL ?? env("DATABASE_URL"),
   },
 });
 

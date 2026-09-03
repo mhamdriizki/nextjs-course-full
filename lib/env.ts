@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const serverEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL wajib diisi"),
+  DIRECT_URL: z.string().min(1).optional(),
   BETTER_AUTH_SECRET: z.string().min(1, "BETTER_AUTH_SECRET wajib diisi"),
   BETTER_AUTH_URL: z.url("BETTER_AUTH_URL harus URL yang valid"),
   GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID wajib diisi"),
