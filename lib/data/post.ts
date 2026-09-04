@@ -1,6 +1,7 @@
 import { cacheTag } from "next/cache";
 import { db } from "../db";
 import { cache } from "react";
+import { logger } from "../logger";
 
 export async function createPost(data: {
   title: string;
@@ -16,17 +17,21 @@ export async function createPost(data: {
 }
 
 export const getPostBySlug = cache(async (slug: string) => {
-  return db.post.findFirst({
+  const start = Date.now();
+  const post = await db.post.findFirst({
     where: {slug, deletedAt: null},
     include: {author: { select: {name: true, email: true}}}
-  })
+  });
+  // pasang log monitoring
+  logger.info("post by slug query", { route: "getPostBySlug", slug, duration: Date.now() - start })
+  return post;
 })
 
 export async function listPublishPosts() {
   "use cache"
   cacheTag("posts")
-
-  return db.post.findMany({
+  const start = Date.now();
+  const posts = await db.post.findMany({
     where: { published: true, deletedAt: null },
     orderBy: { createdAt: "desc" },
     select: {
@@ -38,6 +43,9 @@ export async function listPublishPosts() {
       author: { select: {name: true }}
     }
   });
+  // pasang log monitoring
+  logger.info("published posts query", { route: "listPublishPosts", duration: Date.now() - start })
+  return posts;
 }
 
 export async function updatePost(

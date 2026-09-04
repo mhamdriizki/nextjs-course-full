@@ -24,6 +24,7 @@ async function PostDetailContent({ slug }: { slug: string }) {
   await connection();
 
   const post = await getPostBySlug(slug);
+  console.log('test');
   const session = await auth.api.getSession({
     headers: await headers()
   })
