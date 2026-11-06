@@ -1,13 +1,22 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VIPpage() {
-  const data = localStorage.getItem('vip');
+  const router = useRouter();
+  const [allowed, setAllowed] = useState(false);
 
-  if (data !== 'yes') {
-    redirect("/");
-  }
+  // localStorage hanya ada di browser, jadi dibaca di useEffect (bukan saat render/prerender)
+  useEffect(() => {
+    if (localStorage.getItem('vip') === 'yes') {
+      setAllowed(true);
+    } else {
+      router.replace("/");
+    }
+  }, [router]);
+
+  if (!allowed) return null;
 
   return (
     <div style={{ padding:'3rem', background:'gold', minHeight:'100vh'}}>
