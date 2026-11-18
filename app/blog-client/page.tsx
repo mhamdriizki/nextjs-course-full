@@ -10,18 +10,25 @@ export default function BlogClientPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const controller = new AbortController()
+
     async function ambilPosts() {
       try {
-        const res = await fetch("/api/posts")
+        const res = await fetch("/api/posts", { signal: controller.signal })
         if (!res.ok) throw new Error("Gagal mengambil data artikel")
         setPosts(await res.json())
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Terjadi kesalahan")
+        // Request yang dibatalkan itu normal, abaikan
+        if (e instanceof Error && e.name !== "AbortError") setError(e.message)
       } finally {
-        setLoading(false)
+        // Jangan ubah state kalau sudah dibatalkan
+        if (!controller.signal.aborted) setLoading(false)
       }
     }
     ambilPosts()
+
+    // Cleanup: jalan saat komponen hilang atau effect diulang
+    return () => controller.abort()
   }, [])
 
   return (
